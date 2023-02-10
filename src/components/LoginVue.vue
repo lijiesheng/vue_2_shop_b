@@ -7,8 +7,8 @@
         <img src="../assets/logo.png" alt="">
       </div>
 <!--    登录表单区域  -->
-<!--    ref="form" :model="form" 数据绑定  -->
-      <el-form :model="loginForm" :rules="loginFormRules" label-width="70px" class="login_form">
+<!--    ref="form" :model="form" 数据绑定  ref="loginFormRef" 这个表单的引用 -->
+      <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="70px" class="login_form">
 <!--        用户名  prop 是校验的 username-->
         <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
@@ -20,7 +20,7 @@
 <!--        按钮-->
         <el-form-item class = "btns">
           <el-button type="primary">登录</el-button>
-          <el-button type="info">重置</el-button>
+          <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -53,9 +53,11 @@ export default {
   },
 
   methods: {
-    // onSubmit() {
-    //   console.log('submit!');
-    // }
+    // 重置按钮
+    resetLoginForm () {
+      console.log(this)
+      this.$refs.loginFormRef.resetFields();
+    }
   }
 }
 </script>
