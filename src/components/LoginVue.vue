@@ -2,9 +2,26 @@
   <div class="login_container">
 <!--    Login 页面-->
     <div class="login_box">
+<!--      头像区域-->
       <div class="avatar_box">
         <img src="../assets/logo.png" alt="">
       </div>
+<!--    登录表单区域  -->
+      <el-form label-width="60px" class="login_form">
+<!--        用户名-->
+        <el-form-item label="用户名">
+          <el-input ></el-input>
+        </el-form-item>
+<!--        密码-->
+        <el-form-item label="密码">
+          <el-input ></el-input>
+        </el-form-item>
+<!--        按钮-->
+        <el-form-item class = "btns">
+          <el-button type="primary">登录</el-button>
+          <el-button type="info">重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
   </div>
 </template>
@@ -52,4 +69,16 @@ img {
   background-color: #eeeeee;
 }
 
+.btns {
+  display: flex;
+  justify-content: right; /*  按钮尾部对齐*/
+}
+
+.login_form {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
 </style>
