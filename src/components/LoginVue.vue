@@ -8,13 +8,13 @@
       </div>
 <!--    登录表单区域  -->
 <!--    ref="form" :model="form" 数据绑定  -->
-      <el-form :model="loginForm" label-width="60px" class="login_form">
-<!--        用户名-->
-        <el-form-item label="用户名">
+      <el-form :model="loginForm" :rules="loginFormRules" label-width="70px" class="login_form">
+<!--        用户名  prop 是校验的 username-->
+        <el-form-item label="用户名" prop="username">
           <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
-<!--        密码-->
-        <el-form-item label="密码">
+<!--        密码 prop 是校验的 password-->
+        <el-form-item label="密码" prop="password">
           <el-input v-model="loginForm.password" prefix-icon="el-icon-s-opportunity" type="password"></el-input>
         </el-form-item>
 <!--        按钮-->
@@ -35,10 +35,23 @@ export default {
       // 这是登录表单的数据
       loginForm: {
         username: 'aa',
-        password: '11',
+        password: '11'
+      },
+      // 这是表单验证规则对象
+      loginFormRules: {
+        // 验证用户名是否合法
+        username: [
+          {required: true, message: '请输入用户名', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '请输入密码', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ]
       }
     }
   },
+
   methods: {
     // onSubmit() {
     //   console.log('submit!');
