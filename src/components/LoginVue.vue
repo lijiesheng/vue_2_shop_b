@@ -19,7 +19,7 @@
         </el-form-item>
 <!--        按钮-->
         <el-form-item class = "btns">
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
@@ -53,10 +53,19 @@ export default {
   },
 
   methods: {
-    // 重置按钮
+    // 重置按钮, 表单清空
     resetLoginForm () {
       console.log(this)
-      this.$refs.loginFormRef.resetFields();
+      // this.$refs.loginFormRef 表单的引用
+      this.$refs.loginFormRef.resetFields()
+    },
+    // 表单的预校验
+    login () {
+      // this.$refs.loginFormRef 表单的引用
+      this.$refs.loginFormRef.validate((valid) => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+      })
     }
   }
 }
