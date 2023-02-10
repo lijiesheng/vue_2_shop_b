@@ -7,14 +7,15 @@
         <img src="../assets/logo.png" alt="">
       </div>
 <!--    登录表单区域  -->
-      <el-form label-width="60px" class="login_form">
+<!--    ref="form" :model="form" 数据绑定  -->
+      <el-form :model="loginForm" label-width="60px" class="login_form">
 <!--        用户名-->
         <el-form-item label="用户名">
-          <el-input ></el-input>
+          <el-input v-model="loginForm.username" prefix-icon="el-icon-user-solid"></el-input>
         </el-form-item>
 <!--        密码-->
         <el-form-item label="密码">
-          <el-input ></el-input>
+          <el-input v-model="loginForm.password" prefix-icon="el-icon-s-opportunity" type="password"></el-input>
         </el-form-item>
 <!--        按钮-->
         <el-form-item class = "btns">
@@ -28,7 +29,21 @@
 
 <script>
 export default {
-  name: 'LoginVue'
+  name: 'LoginVue',
+  data () {
+    return {
+      // 这是登录表单的数据
+      loginForm: {
+        username: 'aa',
+        password: '11',
+      }
+    }
+  },
+  methods: {
+    // onSubmit() {
+    //   console.log('submit!');
+    // }
+  }
 }
 </script>
 
