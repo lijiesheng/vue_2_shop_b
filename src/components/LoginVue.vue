@@ -67,11 +67,29 @@ export default {
         console.log(valid)
         // 校验不通过
         if (!valid) return
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
         const {data: res} = await this.$http.post('login', this.loginForm)
+        console.log('res = ', res)
         if (res.meta.status !== 200) {
-          return console.log('登录失败')
+          // return console.log('登录失败')
+          // 弹框
+          // this.$alert('重新输入用户名和密码', '登录失败', {
+          //   confirmButtonText: '确定',
+          //   callback: action => {
+          //     // 登录失败，去掉错误的用户名和密码
+          //     this.$refs.loginFormRef.resetFields()
+          //   }
+          // })
+          // 消息提示
+          this.$message.error('用户名和密码错误')
+          // 登录失败，去掉错误的用户名和密码
+          this.$refs.loginFormRef.resetFields()
+        } else {
+          this.$message({
+            message: '恭喜您' + this.loginForm.username + '登录成功',
+            type: 'success'
+          })
         }
-        console.log('登录成功')
       })
     }
   }
