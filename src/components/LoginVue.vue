@@ -62,9 +62,16 @@ export default {
     // 表单的预校验
     login () {
       // this.$refs.loginFormRef 表单的引用
-      this.$refs.loginFormRef.validate((valid) => {
+      this.$refs.loginFormRef.validate(async valid => {
         // 字段的校验通过了, 返回true; 没有通过，返回false
         console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        const {data: res} = await this.$http.post('login', this.loginForm)
+        if (res.meta.status !== 200) {
+          return console.log('登录失败')
+        }
+        console.log('登录成功')
       })
     }
   }
