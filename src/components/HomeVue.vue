@@ -14,12 +14,12 @@
       <el-container>
         <!--侧边栏-->
         <el-aside width="200px">
-          <!--侧边栏菜单区域-->
+          <!--侧边栏菜单区域  unique-opened 仅仅展开一个-->
           <el-col>
             <el-menu
               background-color="#545c64"
               text-color="#fff"
-              active-text-color="#409EFF">
+              active-text-color="#409EFF" unique-opened>
               <!--一级菜单-->
               <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
               <el-submenu :index="item.id + ''" v-for="item in munuList" :key="item.id">
@@ -132,6 +132,10 @@ export default {
   color: #333;
   text-align: center;
   line-height: 200px;
+}
+/*二级菜单展开和一级菜单展开一样长*/
+.el-menu {
+  border-right: none;
 }
 
 /*el-main 就是类名 主体区域*/
