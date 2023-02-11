@@ -18,14 +18,15 @@
           <el-col>
             <el-menu
               background-color="#545c64"
-              active-text-color="#ffd04b">
+              text-color="#fff"
+              active-text-color="#409EFF">
               <!--一级菜单-->
               <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
               <el-submenu :index="item.id + ''" v-for="item in munuList" :key="item.id">
                 <!--一级菜单的模板-->
                 <template slot="title">
                   <!--图标-->
-                  <i class="el-icon-location"></i>
+                  <i :class=iconsObj[item.id] id="icon"></i>
                   <!--文本-->
                   <span>{{item.authName}}</span>
                 </template>
@@ -33,7 +34,7 @@
                 <el-menu-item :index="subItem.id" v-for="subItem in item.children" :key="subItem.id">
                   <template slot="title">
                     <!--图标-->
-                    <i class="el-icon-location"></i>
+                    <i class="el-icon-menu"></i>
                     <!--文本-->
                     <span>{{subItem.authName}}</span>
                   </template>
@@ -59,7 +60,15 @@ export default {
   data () {
     return {
       // 左侧菜单数据
-      munuList: []
+      munuList: [],
+      // 这些图标的值最好在后端返回来，先不管了
+      iconsObj: {
+        '125': 'el-icon-s-custom',
+        '103': 'el-icon-s-marketing',
+        '101': 'el-icon-s-marketing',
+        '102': 'el-icon-s-order',
+        '145': 'el-icon-s-order'
+      }
     }
   },
   methods: {
@@ -148,5 +157,13 @@ body > .el-container {
 
 .home-container {
   height: 100%;
+}
+
+.el-icon-menu  {
+  margin-right: 20px;
+}
+
+#icon {
+  margin-right: 30px;
 }
 </style>
