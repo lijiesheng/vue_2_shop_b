@@ -34,8 +34,8 @@ export default {
     return {
       // 这是登录表单的数据
       loginForm: {
-        username: 'aa',
-        password: '11'
+        username: 'admin',
+        password: '123456'
       },
       // 这是表单验证规则对象
       loginFormRules: {
@@ -70,6 +70,7 @@ export default {
         // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
         const {data: res} = await this.$http.post('login', this.loginForm)
         console.log('res = ', res)
+        // 登录失败
         if (res.meta.status !== 200) {
           // return console.log('登录失败')
           // 弹框
@@ -84,11 +85,19 @@ export default {
           this.$message.error('用户名和密码错误')
           // 登录失败，去掉错误的用户名和密码
           this.$refs.loginFormRef.resetFields()
-        } else {
+        } else { // 登录成功
           this.$message({
             message: '恭喜您' + this.loginForm.username + '登录成功',
             type: 'success'
           })
+
+          // 1. 将登录成功之后的 token, 保存到客户端的 sessionStorage 中
+          //   1.1 项目中除了登录之外的其他 API 接口，必须在登录之后才能访问
+          //   1.2 token 只应在当前网站打开期间生效，所以 token 保存在 sessionStorage 中
+          // 2. 通过编程式导航跳转到后台主页，路由地址是 /home
+          window.sessionStorage.setItem('token', res.data.token)
+          // 可以在google浏览器检查中的Application-->storage中查询
+          await this.$router.push('/home')
         }
       })
     }

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginVue from '../components/LoginVue'
+import HomeVue from '../components/HomeVue'
 
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ export default new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/home',
+      name: 'HomeVue',
+      component: HomeVue
     }
   ]
 })
