@@ -20,29 +20,22 @@
               background-color="#545c64"
               active-text-color="#ffd04b">
               <!--一级菜单-->
-              <el-submenu index="1">
+              <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
+              <el-submenu :index="item.id + ''" v-for="item in munuList" :key="item.id">
                 <!--一级菜单的模板-->
                 <template slot="title">
                   <!--图标-->
                   <i class="el-icon-location"></i>
                   <!--文本-->
-                  <span>导航一</span>
+                  <span>{{item.authName}}</span>
                 </template>
                 <!--二级菜单-->
-                <el-menu-item index="1-4-1">
+                <el-menu-item :index="subItem.id" v-for="subItem in item.children" :key="subItem.id">
                   <template slot="title">
                     <!--图标-->
                     <i class="el-icon-location"></i>
                     <!--文本-->
-                    <span>导航一</span>
-                  </template>
-                </el-menu-item>
-                <el-menu-item index="1-4-1">
-                  <template slot="title">
-                    <!--图标-->
-                    <i class="el-icon-location"></i>
-                    <!--文本-->
-                    <span>导航一</span>
+                    <span>{{subItem.authName}}</span>
                   </template>
                 </el-menu-item>
               </el-submenu>
@@ -58,6 +51,7 @@
 <script>
 export default {
   name: 'HomeVue',
+  // 进入这个页面就会调用 create()方法
   created () {
     this.getMunuList()
   },
