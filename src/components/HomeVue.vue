@@ -2,7 +2,11 @@
     <el-container class="home-container">
       <!--头部布局-->
       <el-header>
-        Header
+        <!---->
+        <div class="el_header_div">
+          <img src="../assets/heima.png" alt="">
+          <span class="el_header_span">电商后台管理系统</span>
+        </div>
         <el-button type="info" @click="logOut">退出</el-button>
       </el-header>
 
@@ -35,6 +39,33 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
+  /*左右布局*/
+  display: flex;
+  /*两遍对齐*/
+  justify-content: space-between;
+  /*左边间距为0*/
+  padding-left: 0;
+  /*右边间距为0*/
+  padding-right: 0;
+  /*上下居中显示*/
+  align-items: center;
+  /*文本颜色*/
+  color:#fff;
+  /*文本的大小*/
+  font-size: 20px;
+}
+
+/*对el-header 的 el_header_div 进行布局*/
+.el_header_div {
+  /*左右布局*/
+  display: flex;
+  /*上下居中显示*/
+  align-items: center;
+}
+
+.el_header_span {
+  /*span 距离左边的 15px*/
+  margin-left: 15px ;
 }
 
 /*el-aside 就是类名  侧边栏*/
