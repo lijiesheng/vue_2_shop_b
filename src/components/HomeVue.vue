@@ -58,10 +58,30 @@
 <script>
 export default {
   name: 'HomeVue',
+  created () {
+    this.getMunuList()
+  },
+  // 这里需要电商管理后台API接口文档 1.4.2
+  data () {
+    return {
+      // 左侧菜单数据
+      munuList: []
+    }
+  },
   methods: {
     logOut () {
       window.sessionStorage.removeItem('token')
       this.$router.push('/login') // 重定向到登录页面
+    },
+    // 获取所有的菜单
+    async getMunuList () {
+      const {data: res} = await this.$http.get('menus')
+      console.log('res1 = ', res)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
+      this.munuList = res.data
+      console.log(this.munuList)
     }
   }
 }
