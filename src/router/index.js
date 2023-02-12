@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import LoginVue from '../components/LoginVue'
 import HomeVue from '../components/HomeVue'
 import WelcomeVue from '../components/WelcomeVue'
+import UserVue from '../components/user/UserVue'
 
 Vue.use(Router)
 
@@ -19,7 +20,7 @@ const router = new Router({
       redirect: '/login'
     },
     {
-      path: '/home', // 跳转到 home 页面后，然后在home页面中添加了welcome 页面
+      path: '/home', // 跳转到 home 页面后，然后在home页面中添加了 welcome 页面。就会自动加载 home 路由和 welcome 路由
       name: 'HomeVue',
       component: HomeVue,
       redirect: '/welcome', // 重定向导 /welcome
@@ -27,7 +28,13 @@ const router = new Router({
         {
           path: '/welcome',
           name: 'WelcomeVue',
-          component: WelcomeVue
+          component: WelcomeVue,
+          redirect: '/user'
+        },
+        {
+          path: '/users',
+          name: 'UserVue',
+          component: UserVue
         }
       ]
     }
