@@ -20,6 +20,7 @@
           collapse  是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）
           collapse-transition 不开启开启折叠动画
           router 启用该模式会在激活导航时以 index 作为 path 进行路由跳转[在二级菜单中可以使用到]
+          default-active 当前激活菜单的 index 【高亮显示】
           -->
           <el-col>
             <el-menu
@@ -27,7 +28,8 @@
               text-color="#fff"
               active-text-color="#409EFF" unique-opened
               :collapse=collapse
-              :collapse-transition="false" :router="true">
+              :collapse-transition="false" :router="true"
+              :default-active="activePath">
               <!--一级菜单-->
               <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
               <el-submenu :index="(item.id).toString()" v-for="item in munuList" :key="item.id">
@@ -40,7 +42,7 @@
                 </template>
                 <!--二级菜单-->
                 <!--这里的 :index 一定要是字符串， index 是跳转的path-->
-                <el-menu-item :index="'/'+ subItem.path" v-for="subItem in item.children" :key="subItem.id">
+                <el-menu-item :index="'/'+ subItem.path" v-for="subItem in item.children" :key="subItem.id" @click="saveNavState('/'+subItem.path)">
                   <template slot="title">
                     <!--图标-->
                     <i class="el-icon-menu"></i>
@@ -67,6 +69,8 @@ export default {
   // 进入这个页面就会调用 create()方法
   created () {
     this.getMunuList()
+    // 进入这个页面就会调用这个方法
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   // 这里需要电商管理后台API接口文档 1.4.2
   data () {
@@ -82,7 +86,9 @@ export default {
         '145': 'el-icon-s-order'
       },
       collapse: false,
-      width: '200px'
+      width: '200px',
+      // 被激活的链接地址
+      activePath: ''
     }
   },
   methods: {
@@ -108,6 +114,10 @@ export default {
         this.width = '64px'
       }
       this.collapse = !this.collapse
+    },
+    saveNavState (str) {
+      window.sessionStorage.setItem('activePath', str)
+      this.activePath = str
     }
   }
 }

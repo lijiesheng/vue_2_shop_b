@@ -28,8 +28,7 @@ const router = new Router({
         {
           path: '/welcome',
           name: 'WelcomeVue',
-          component: WelcomeVue,
-          redirect: '/user'
+          component: WelcomeVue
         },
         {
           path: '/users',
