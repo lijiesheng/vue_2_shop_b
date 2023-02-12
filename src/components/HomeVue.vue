@@ -13,13 +13,20 @@
       <!--页面主体区域-->
       <el-container>
         <!--侧边栏-->
-        <el-aside width="200px">
-          <!--侧边栏菜单区域  unique-opened 仅仅展开一个-->
+        <el-aside :width=width >
+          <!--实现菜单的折叠和展开-->
+          <div class="toggle-button" @click="toggleCollapse">|||</div>
+          <!--侧边栏菜单区域  unique-opened 仅仅展开一个
+          collapse  是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）
+          collapse-transition 不开启开启折叠动画
+          -->
           <el-col>
             <el-menu
               background-color="#545c64"
               text-color="#fff"
-              active-text-color="#409EFF" unique-opened>
+              active-text-color="#409EFF" unique-opened
+              :collapse=collapse
+              :collapse-transition="false">
               <!--一级菜单-->
               <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
               <el-submenu :index="item.id + ''" v-for="item in munuList" :key="item.id">
@@ -68,7 +75,9 @@ export default {
         '101': 'el-icon-s-marketing',
         '102': 'el-icon-s-order',
         '145': 'el-icon-s-order'
-      }
+      },
+      collapse: false,
+      width: '200px'
     }
   },
   methods: {
@@ -85,6 +94,15 @@ export default {
       }
       this.munuList = res.data
       console.log(this.munuList)
+    },
+    // 折叠和展开
+    toggleCollapse () {
+      if (this.collapse) {
+        this.width = '200px'
+      } else {
+        this.width = '64px'
+      }
+      this.collapse = !this.collapse
     }
   }
 }
@@ -169,5 +187,15 @@ body > .el-container {
 
 #icon {
   margin-right: 30px;
+}
+
+/*折叠和展开*/
+.toggle-button {
+  background-color: #2b4bdb;
+  font-size: 10px;
+  line-height: 24px;
+  color: #ffffff;
+  /*居中*/
+  text-align: center;
 }
 </style>
