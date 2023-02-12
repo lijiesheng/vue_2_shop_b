@@ -19,7 +19,7 @@
             <!--          <el-option label="订单号" value="2"></el-option>-->
             <!--          <el-option label="用户电话" value="3"></el-option>-->
             <!--        </el-select>-->
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="getUsers()"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
@@ -32,15 +32,38 @@
 </template>
 
 <script>
+
 export default {
   name: 'UserVue',
   data () {
     return {
-      input3: '',
-      select: ''
+      // 获取用户列表参数对象
+      queryInfo: {
+        query: '',
+        pagenum: 1,
+        pagesize: 4
+      },
+      userlist: [],
+      total: 0
+    }
+  },
+  create () {
+    this.getUsers()
+  },
+  methods: {
+    async getUsers () {
+      const {data: res} = await this.$http.get('users', {params: this.queryInfo})
+      console.log('users = ', res)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
+      console.log('res1111 = ', res)
+      this.userlist = res.data.users
+      this.total = res.data.total
     }
   }
 }
+
 </script>
 
 <style scoped>
