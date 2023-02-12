@@ -55,7 +55,7 @@
           </el-col>
         </el-aside>
         <!--右侧内容-->
-        <el-main>Main
+        <el-main>
           <!--路由占位符-->
           <router-view></router-view>
         </el-main>
