@@ -19,6 +19,7 @@
           <!--侧边栏菜单区域  unique-opened 仅仅展开一个
           collapse  是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）
           collapse-transition 不开启开启折叠动画
+          router 启用该模式会在激活导航时以 index 作为 path 进行路由跳转[在二级菜单中可以使用到]
           -->
           <el-col>
             <el-menu
@@ -26,10 +27,10 @@
               text-color="#fff"
               active-text-color="#409EFF" unique-opened
               :collapse=collapse
-              :collapse-transition="false">
+              :collapse-transition="false" :router="true">
               <!--一级菜单-->
               <!--每一个 v-for ,尽量都提供一个唯一的key; index 不能一样，否则展开一个，就都展开了 -->
-              <el-submenu :index="item.id + ''" v-for="item in munuList" :key="item.id">
+              <el-submenu :index="(item.id).toString()" v-for="item in munuList" :key="item.id">
                 <!--一级菜单的模板-->
                 <template slot="title">
                   <!--图标-->
@@ -38,7 +39,8 @@
                   <span>{{item.authName}}</span>
                 </template>
                 <!--二级菜单-->
-                <el-menu-item :index="subItem.id" v-for="subItem in item.children" :key="subItem.id">
+                <!--这里的 :index 一定要是字符串， index 是跳转的path-->
+                <el-menu-item :index="'/'+ subItem.path" v-for="subItem in item.children" :key="subItem.id">
                   <template slot="title">
                     <!--图标-->
                     <i class="el-icon-menu"></i>
