@@ -26,6 +26,20 @@
           <el-button type="primary" plain>添加用户</el-button>
         </el-col>
       </el-row>
+<!--用户列表区域 使用 table-->
+<!--    border边框线  -->
+      <el-table :data="userlist" style="width: 100%" border>
+        <el-table-column prop="username"  label="姓名" width="120"></el-table-column>
+        <el-table-column prop="email" label="邮箱" width="120"></el-table-column>
+        <el-table-column prop="mobile" label="电话" width="120"></el-table-column>
+        <el-table-column prop="role_name" label="角色" width="120"></el-table-column>
+        <el-table-column prop="mg_state" label="状态" width="120">
+          <el-switch :v-model="true"  active-color="#13ce66" inactive-color="#ff4949">
+          </el-switch>
+        </el-table-column>
+        <el-table-column prop="create_time" label="创建时间" width="120"></el-table-column>
+        <el-table-column label="操作" width="120"></el-table-column>
+      </el-table>
     </el-card>
 
   </div>
@@ -95,4 +109,8 @@ export default {
 
 }
 
+.el-table {
+  margin: 0px;
+  font-size: 12px;
+}
 </style>
