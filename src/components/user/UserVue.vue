@@ -35,8 +35,10 @@
         <el-table-column prop="mobile" label="电话" width="120"></el-table-column>
         <el-table-column prop="role_name" label="角色" width="120"></el-table-column>
         <el-table-column prop="mg_state" label="状态" width="120">
-          <el-switch :v-model="true"  active-color="#13ce66" inactive-color="#ff4949">
-          </el-switch>
+<!--     slot-scope 的 scope.row 可以用来接收这一对象的所有值     -->
+          <template slot-scope="scope">
+            <el-switch v-model="scope.row.mg_state"  active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间" width="120"></el-table-column>
         <el-table-column label="操作" width="120"></el-table-column>
