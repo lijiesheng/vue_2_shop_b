@@ -29,6 +29,7 @@
 <!--用户列表区域 使用 table-->
 <!--    border边框线  -->
       <el-table :data="userlist" style="width: 100%" border>
+        <el-table-column type="index" width="60"></el-table-column>
         <el-table-column prop="username"  label="姓名" width="120"></el-table-column>
         <el-table-column prop="email" label="邮箱" width="120"></el-table-column>
         <el-table-column prop="mobile" label="电话" width="120"></el-table-column>
