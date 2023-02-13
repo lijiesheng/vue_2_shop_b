@@ -47,7 +47,7 @@ export default {
       total: 0
     }
   },
-  create () {
+  created () {
     this.getUsers()
   },
   methods: {
