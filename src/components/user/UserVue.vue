@@ -28,20 +28,32 @@
       </el-row>
 <!--用户列表区域 使用 table-->
 <!--    border边框线  -->
-      <el-table :data="userlist" style="width: 100%" border>
-        <el-table-column type="index" width="60"></el-table-column>
+      <el-table :data="userlist" style="width: 100%" border size="medium">
+        <el-table-column type="index" width="60" ></el-table-column>
         <el-table-column prop="username"  label="姓名" width="120"></el-table-column>
         <el-table-column prop="email" label="邮箱" width="120"></el-table-column>
         <el-table-column prop="mobile" label="电话" width="120"></el-table-column>
         <el-table-column prop="role_name" label="角色" width="120"></el-table-column>
-        <el-table-column prop="mg_state" label="状态" width="120">
+        <el-table-column prop="mg_state" label="状态" width="100">
 <!--     slot-scope 的 scope.row 可以用来接收这一对象的所有值     -->
           <template slot-scope="scope">
             <el-switch v-model="scope.row.mg_state"  active-color="#13ce66" inactive-color="#ff4949"></el-switch>
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间" width="120"></el-table-column>
-        <el-table-column label="操作" width="120"></el-table-column>
+<!-- slot -->
+        <el-table-column label="操作" width="150">
+          <template slot-scope="scope">
+<!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+            <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
+<!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
+<!--  tooltip 是文字提示          -->
+            <el-tooltip content="分配权限" placement="bottom" effect="light">
+              <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
 
