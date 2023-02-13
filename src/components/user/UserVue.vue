@@ -37,7 +37,7 @@
         <el-table-column prop="mg_state" label="状态" width="100">
 <!--     slot-scope 的 scope.row 可以用来接收这一对象的所有值     -->
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state"  active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+            <el-switch v-model="scope.row.mg_state"  active-color="#13ce66" inactive-color="#ff4949" @change="userStateChanged(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column prop="create_time" label="创建时间" width="120"></el-table-column>
@@ -118,6 +118,18 @@ export default {
       this.queryInfo.pagenum = newPage
       // 重新获取数据
       this.getUsers()
+    },
+    // 监听 switch 开关的改变
+    async userStateChanged (info) {
+      // console.log(`info = `, info)
+      let url = `users/${info.id}/state/${info.mg_state}`
+      console.log('url = ', url)
+      const {data: res} = await this.$http.put(url)
+      if (res.meta.status !== 200) {
+        info.mg_state = !info.mg_state
+        return this.$message.error(res.meta.message)
+      }
+      this.$message.success('更新数据成功')
     }
   }
 }
