@@ -55,6 +55,19 @@
           </template>
         </el-table-column>
       </el-table>
+<!--     分页 -->
+<!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+<!--   current-page 当前是第几页 -->
+<!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryInfo.pagenum"
+        :page-sizes="[1, 5, 10, 20]"
+        :page-size="queryInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </el-card>
 
   </div>
@@ -69,8 +82,10 @@ export default {
       // 获取用户列表参数对象
       queryInfo: {
         query: '',
+        // 当前的页数
         pagenum: 1,
-        pagesize: 4
+        // 当前每页显示多少条数据
+        pagesize: 1 // 这个值要和:page-sizes 数组的第一个值相同
       },
       userlist: [],
       total: 0
@@ -89,6 +104,20 @@ export default {
       console.log('res1111 = ', res)
       this.userlist = res.data.users
       this.total = res.data.total
+    },
+    // pageSize的改变
+    handleSizeChange (newSize) {
+      console.log(`每页 ${newSize} 条`)
+      this.queryInfo.pagesize = newSize
+      // 重新获取数据
+      this.getUsers()
+    },
+    // 页码值
+    handleCurrentChange (newPage) {
+      console.log(`当前页: ${newPage}`)
+      this.queryInfo.pagenum = newPage
+      // 重新获取数据
+      this.getUsers()
     }
   }
 }
@@ -127,5 +156,9 @@ export default {
 .el-table {
   margin: 0px;
   font-size: 12px;
+}
+.el-pagination {
+  margin: 30px;
+  margin-top: 15px;
 }
 </style>
