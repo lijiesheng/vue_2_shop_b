@@ -13,7 +13,9 @@
       <!--因为这里有搜索和添加用户,可以使用 element-ui layout 布局中的分栏间隔-->
       <el-row :gutter="15">
         <el-col :span="15">
-          <el-input placeholder="请输入内容">
+<!--   clearable 文本可清空, 清空的同时, 查询       -->
+<!--   clear 在点击由 clearable 属性生成的清空按钮时触发  @clear 绑定的事件  -->
+          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUsers()">
             <!--        <el-select v-model="select" slot="prepend" placeholder="请选择">-->
             <!--          <el-option label="餐厅名" value="1"></el-option>-->
             <!--          <el-option label="订单号" value="2"></el-option>-->
@@ -63,7 +65,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[1, 5, 10, 20]"
+        :page-sizes="[5, 10, 20, 50]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -85,7 +87,7 @@ export default {
         // 当前的页数
         pagenum: 1,
         // 当前每页显示多少条数据
-        pagesize: 1 // 这个值要和:page-sizes 数组的第一个值相同
+        pagesize: 5 // 这个值要和:page-sizes 数组的第一个值相同
       },
       userlist: [],
       total: 0
