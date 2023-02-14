@@ -73,7 +73,7 @@
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
 <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
-            <el-button size="mini" type="primary" icon="el-icon-edit" circle></el-button>
+            <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
 <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
             <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
 <!--  tooltip 是文字提示          -->
@@ -96,6 +96,30 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
+<!--   编辑用户信息的对话框 对话框写在哪里都没有关系 -->
+      <el-dialog title="编辑用户" :visible.sync="dialogEditFormVisible" width="50%" @close="closeEditDialog">
+        <!-- rules 添加表单规则      -->
+        <!-- ref 引用      -->
+        <!-- label-width 文字的宽度      -->
+        <el-form :model="editUserForm" :rules="editUserRules" ref="editFormRef" label-width="70px">
+        <!--  prop 验证规则的属性       -->
+          <el-form-item label="用户名">
+            <!--  disabled="true" 不能编辑       -->
+            <el-input v-model="editUserForm.username" autocomplete="off" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editUserForm.email" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="mobile">
+            <el-input v-model="editUserForm.mobile" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogEditFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editUser">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-card>
 
   </div>
@@ -135,11 +159,18 @@ export default {
       },
       userlist: [],
       total: 0,
-      // 添加对话框的显示与隐藏
+      // 添加对话框的显示与隐藏 false 隐藏; true 打开
       dialogFormVisible: false,
+      //
+      dialogEditFormVisible: false,
       addUserForm: {
         username: '',
         password: '',
+        email: '',
+        mobile: ''
+      },
+      editUserForm: {
+        username: '',
         email: '',
         mobile: ''
       },
@@ -154,6 +185,17 @@ export default {
           {required: true, message: '请输入密码', trigger: 'blur'},
           {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
         ],
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {validator: checkEmail, trigger: 'blur'}
+        ],
+        mobile: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          // trigger 触犯校验的时间
+          {validator: checkMobile, trigger: 'blur'}
+        ]
+      },
+      editUserRules: {
         email: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
           {validator: checkEmail, trigger: 'blur'}
@@ -211,6 +253,9 @@ export default {
       // 关闭对话框时候，对话框的数据清空
       this.$refs.addFormRef.resetFields()
     },
+    // 监听编辑用户对话框的关闭事件
+    closeEditDialog () {
+    },
     addUser () {
       this.$refs.addFormRef.validate(async valid => {
         // 字段的校验通过了, 返回true; 没有通过，返回false
@@ -230,8 +275,29 @@ export default {
         })
         // 关闭对话框
         this.dialogFormVisible = false
+        // 用户有新增，需要重新刷新用户
+        await this.getUsers()
+      })
+    },
+    async showEditDialog (info) {
+      // 显示对话框
+      this.dialogEditFormVisible = true
+      console.log('info = ', info)
+      // 这里是否需要通过id 获取数据
+      const {data: res} = await this.$http.get(`users/${info.id}`)
+      if (res.meta.status !== 200) {
+        this.$message.error('查询用户信息失败')
+      }
+      // 插入值
+      this.editUserForm = res.data
+      console.log('this.editUserForm = ', this.editUserForm)
+    },
+    editUser () {
+      this.$refs.editFormRef.validate(async valid => {
+
       })
     }
+
   }
 }
 
