@@ -27,7 +27,8 @@
         <el-col :span="4">
           <el-button type="primary" plain @click="dialogFormVisible = true">添加用户</el-button>
 <!--    添加用户的对话框   -->
-          <el-dialog title="添加用户" :visible.sync="dialogFormVisible" width="50%">
+<!-- close 当对话框关闭, close 会调用         -->
+          <el-dialog title="添加用户" :visible.sync="dialogFormVisible" width="50%" @close="closeDialog">
 <!-- rules 添加表单规则      -->
 <!-- ref 引用      -->
             <el-form :model="addUserForm" :rules="addUserRules" ref="addFormRef" label-width="70px">
@@ -204,6 +205,11 @@ export default {
         return this.$message.error(res.meta.message)
       }
       this.$message.success('更新数据成功')
+    },
+    // 监听添加用户对话框的关闭事件
+    closeDialog () {
+      // 关闭对话框时候，对话框的数据清空
+      this.$refs.addFormRef.resetFields()
     }
   }
 }
