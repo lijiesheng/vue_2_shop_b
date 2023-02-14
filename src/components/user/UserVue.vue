@@ -105,6 +105,24 @@
 export default {
   name: 'UserVue',
   data () {
+    // 自定义校验规则
+    var checkEmail = (rule, value, callback) => {
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+      if (regEmail.test(value)) {
+        // 合法
+        return callback()
+      }
+      callback(new Error('请输入合法的邮箱'))
+    }
+    // 验证邮箱的规则
+    var checkMobile = (rule, value, callback) => {
+      const phoneReg = /^1[34578]\d{9}$$/
+      if (!phoneReg.test(value)) {
+        return callback(new Error('请输入合法的电话号码'))
+      }
+      // 合法
+      return callback()
+    }
     return {
       // 获取用户列表参数对象
       queryInfo: {
@@ -137,11 +155,12 @@ export default {
         ],
         email: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
-          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          {validator: checkEmail, trigger: 'blur'}
         ],
         mobile: [
           {required: true, message: '请输入邮箱', trigger: 'blur'},
-          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          // trigger 触犯校验的时间
+          {validator: checkMobile, trigger: 'blur'}
         ]
       }
     }
