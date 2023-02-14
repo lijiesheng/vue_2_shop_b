@@ -49,7 +49,7 @@
             <div slot="footer" class="dialog-footer">
 <!--       dialogFormVisible = false 隐藏对话框       -->
               <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+              <el-button type="primary" @click="addUser">确 定</el-button>
             </div>
           </el-dialog>
         </el-col>
@@ -210,6 +210,27 @@ export default {
     closeDialog () {
       // 关闭对话框时候，对话框的数据清空
       this.$refs.addFormRef.resetFields()
+    },
+    addUser () {
+      this.$refs.addFormRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
+        const {data: res} = await this.$http.post('users', this.addUserForm)
+        console.log('res = ', res)
+        if (res.meta.status !== 201) {
+          this.$message.error('用户名和密码错误')
+        }
+        // 登录失败，去掉错误的用户名和密码
+        this.$message({
+          message: '恭喜您' + this.addUserForm.username + '登录成功',
+          type: 'success'
+        })
+        // 关闭对话框
+        this.dialogFormVisible = false
+      })
     }
   }
 }
