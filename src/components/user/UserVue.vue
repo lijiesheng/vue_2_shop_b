@@ -161,7 +161,7 @@ export default {
       total: 0,
       // 添加对话框的显示与隐藏 false 隐藏; true 打开
       dialogFormVisible: false,
-      //
+      // 编辑对话框
       dialogEditFormVisible: false,
       addUserForm: {
         username: '',
@@ -170,6 +170,7 @@ export default {
         mobile: ''
       },
       editUserForm: {
+        id: '',
         username: '',
         email: '',
         mobile: ''
@@ -255,6 +256,7 @@ export default {
     },
     // 监听编辑用户对话框的关闭事件
     closeEditDialog () {
+      this.$refs.editFormRef.resetFields()
     },
     addUser () {
       this.$refs.addFormRef.validate(async valid => {
@@ -294,7 +296,23 @@ export default {
     },
     editUser () {
       this.$refs.editFormRef.validate(async valid => {
-
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        console.log('this.editUserForm = ', this.editUserForm)
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
+        const {data: res} = await this.$http.put(`users/${this.editUserForm.id}`, {
+          email: this.editUserForm.email,
+          mobile: this.editUserForm.mobile
+        })
+        if (res.meta.status !== 200) {
+          this.$message.error('修改用户信息失败')
+        }
+        // 重新获取数据
+        await this.getUsers()
+        // 关闭对话框
+        this.dialogEditFormVisible = false
       })
     }
 
