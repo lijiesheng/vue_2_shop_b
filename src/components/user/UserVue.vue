@@ -75,7 +75,7 @@
 <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
             <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
 <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle></el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
 <!--  tooltip 是文字提示          -->
             <el-tooltip content="分配权限" placement="bottom" effect="light">
               <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
@@ -319,8 +319,35 @@ export default {
           type: 'success'
         })
       })
-    }
+    },
 
+    async showDeleteMessageBox (info) {
+      // 如果返回成功,不会进入 catch; 返回失败 进入 catch
+      const res = await this.$confirm(`此操作将删除用户 ${info.username}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      console.log('res_res = ', res)
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`users/${info.id}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(info.username + '删除失败')
+        } else {
+          await this.getUsers()
+          // 重新获取数据
+          this.$message.info(info.username + '删除成功')
+        }
+      }
+    }
   }
 }
 
