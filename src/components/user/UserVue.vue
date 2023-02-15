@@ -270,7 +270,7 @@ export default {
         }
         // 登录失败，去掉错误的用户名和密码
         this.$message({
-          message: '恭喜您' + this.addUserForm.username + '登录成功',
+          message: this.addUserForm.username + '添加成功',
           type: 'success'
         })
         // 关闭对话框
