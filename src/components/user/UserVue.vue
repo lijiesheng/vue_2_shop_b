@@ -313,6 +313,11 @@ export default {
         await this.getUsers()
         // 关闭对话框
         this.dialogEditFormVisible = false
+        // 提示修改成功
+        this.$message({
+          message: this.editUserForm.username + '修改成功',
+          type: 'success'
+        })
       })
     }
 
