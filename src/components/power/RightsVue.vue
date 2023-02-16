@@ -10,11 +10,22 @@
     <!-- 卡片视图 -->
     <el-card class="box-card">
 <!--  table 数据表格  -->
-      <el-table :data="rightsList" style="width: 100%" border size="medium">
-        <el-table-column type="index" width="60" ></el-table-column>
-        <el-table-column prop="authName"  label="权限名称" width="120"></el-table-column>
-        <el-table-column prop="path"  label="路径" width="120"></el-table-column>
-        <el-table-column prop="authName"  label="权限等级" width="120"></el-table-column>
+<!--  border 是边框线    -->
+<!--  stripe 各行变色    -->
+      <el-table :data="rightsList" style="width: 100%" border stripe size="medium">
+        <el-table-column type="index" width="60" label="#"></el-table-column>
+        <el-table-column prop="authName"  label="权限名称" width="200"></el-table-column>
+        <el-table-column prop="path"  label="路径" width="200"></el-table-column>
+<!--  element-ui 的标签  -->
+        <el-table-column prop="level"  label="权限等级" width="200">
+          <!--     slot-scope 的 scope.row 可以用来接收这一对象的所有值     -->
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.level === '0'">一级</el-tag>
+            <el-tag type="success" v-else-if="scope.row.level === '1'">二级</el-tag>
+            <el-tag type="info" v-else-if="scope.row.level === '2'">三级</el-tag>
+          </template>
+
+        </el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -46,15 +57,4 @@ export default {
 </script>
 
 <style scoped>
-.text {
-  font-size: 14px;
-}
-
-.item {
-  padding: 18px 0;
-}
-
-.box-card {
-  width: 480px;
-}
 </style>
