@@ -15,6 +15,14 @@
           <el-button class="button-position" type="primary" round>添加角色</el-button>
         </el-col>
       </el-row>
+      <!--表格-->
+      <el-table :data="roleList" border stripe >
+        <el-table-column type="index" width="60" label="#"></el-table-column>
+        <el-table-column prop="roleDesc" width="60" label="角色描述"></el-table-column>
+        <el-table-column prop="roleName" width="60" label="角色名称"></el-table-column>
+        <el-table-column width="60" label="操作">
+        </el-table-column>
+      </el-table>
     </el-card>
   </div>
 </template>
