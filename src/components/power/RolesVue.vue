@@ -12,7 +12,7 @@
 <!--   一个添加角色按钮   el-row 代表一行 el-col代表一列 -->
       <el-row>
         <el-col>
-          <el-button type="primary" round>添加角色</el-button>
+          <el-button class="button-position" type="primary" round>添加角色</el-button>
         </el-col>
       </el-row>
     </el-card>
@@ -51,4 +51,17 @@ export default {
 .el-card {
   margin-top: 20px;
 }
+
+.button {
+  /* text-align: center; */
+}
+
+.button-position {
+  position: relative;
+  left: -40%;
+  top: 50%;
+  transform: translate(-50%, -120%)
+  /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
+}
+
 </style>
