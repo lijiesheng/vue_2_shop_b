@@ -23,6 +23,23 @@
 export default {
   name: 'RolesVue',
   data () {
+    return {
+      // 所有角色列表数据
+      roleList: []
+    }
+  },
+  created () {
+    this.getRolesList()
+  },
+  methods: {
+    async getRolesList () {
+      const {data: res} = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败！')
+      }
+      this.roleList = res.data
+      console.log('this.roleList = ', this.roleList)
+    }
   }
 }
 </script>
