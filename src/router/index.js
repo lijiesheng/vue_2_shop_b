@@ -5,6 +5,7 @@ import HomeVue from '../components/HomeVue'
 import WelcomeVue from '../components/WelcomeVue'
 import UserVue from '../components/user/UserVue'
 import RightsVue from '../components/power/RightsVue'
+import RolesVue from '../components/power/RolesVue'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ const router = new Router({
           path: '/rights',
           name: 'RightsVue',
           component: RightsVue
+        },
+        {
+          path: '/roles',
+          name: 'RolesVue',
+          component: RolesVue
         }
       ]
     }
