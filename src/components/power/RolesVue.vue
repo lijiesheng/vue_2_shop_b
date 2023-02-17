@@ -16,11 +16,23 @@
         </el-col>
       </el-row>
       <!--表格-->
-      <el-table :data="roleList" border stripe >
-        <el-table-column type="index" width="60" label="#"></el-table-column>
-        <el-table-column prop="roleDesc" width="60" label="角色描述"></el-table-column>
-        <el-table-column prop="roleName" width="60" label="角色名称"></el-table-column>
-        <el-table-column width="60" label="操作">
+      <el-table :data="roleList" border stripe style="width: 100%" size="medium">
+<!--展开行-->
+        <el-table-column  type="expand" width="100" label="<"></el-table-column>
+<!-- 索引列 -->
+        <el-table-column type="index" width="100" label="#"></el-table-column>
+        <el-table-column prop="roleDesc" width="200" label="角色描述"></el-table-column>
+        <el-table-column prop="roleName" width="200" label="角色名称"></el-table-column>
+<!-- 操作是要获取数据id , 需要用到作用域插槽-->
+        <el-table-column width="300" label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" icon="el-icon-edit" circle>编辑</el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle>删除</el-button>
+            <!--  tooltip 是文字提示          -->
+            <el-tooltip content="分配权限" placement="bottom" effect="light">
+              <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
+            </el-tooltip>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -72,4 +84,8 @@ export default {
   /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
 }
 
+.el-table {
+  margin: 0px;
+  font-size: 12px;
+}
 </style>
