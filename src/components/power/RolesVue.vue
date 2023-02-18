@@ -21,7 +21,7 @@
 <!--     label-width="auto" 默认对其       -->
             <el-form :model="addRolesForm" :rules="addRolesRules" ref="addRolesRef" label-width="80px">
               <!--  prop 验证规则的属性       -->
-              <el-form-item label="角色名" prop="roleName">
+              <el-form-item label="角色名称" prop="roleName">
                 <el-input v-model="addRolesForm.roleName" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item label="角色描述" prop="roleDesc">
@@ -48,7 +48,7 @@
 <!-- 操作是要获取数据id , 需要用到作用域插槽-->
         <el-table-column width="300" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit" circle>编辑</el-button>
+            <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditRolesDialog(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete" circle>删除</el-button>
             <!--  tooltip 是文字提示          -->
             <el-tooltip content="分配权限" placement="bottom" effect="light">
@@ -57,6 +57,27 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--   编辑用角色信息的对话框 对话框写在哪里都没有关系 -->
+      <el-dialog title="编辑角色" :visible.sync="dialogEditRolesVisible" width="50%">
+        <!-- rules 添加表单规则      -->
+        <!-- ref 引用      -->
+        <!-- label-width 文字的宽度      -->
+        <el-form :model="editRolesForm" :rules="editRolesRules" ref="editRolesFormRef" label-width="70px">
+          <!--  prop 验证规则的属性       -->
+          <el-form-item label="角色名称">
+            <el-input v-model="editRolesForm.roleName" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="角色描述">
+            <!--  disabled="true" 不能编辑       -->
+            <el-input v-model="editRolesForm.roleDesc" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogEditRolesVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editRoles">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -72,9 +93,27 @@ export default {
         roleName: '', // 角色名
         roleDesc: '' // 角色描述
       },
+      editRolesForm: {
+        roleId: '', // 根据角色id获取后端接口数据居然是roleId
+        roleName: '',
+        roleDesc: ''
+      },
       // 添加对话框的显示与隐藏 false 隐藏; true 打开
       dialogAddRolesFormVisible: false,
+      // 编辑对话框的显示与隐藏 false 隐藏; true 打开
+      dialogEditRolesVisible: false,
       addRolesRules: {
+        // 验证角色名是否合法
+        roleName: [
+          {required: true, message: '请输入角色名', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ],
+        roleDesc: [
+          {required: true, message: '请输入决胜描述', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ]
+      },
+      editRolesRules: {
         // 验证角色名是否合法
         roleName: [
           {required: true, message: '请输入角色名', trigger: 'blur'},
@@ -130,6 +169,41 @@ export default {
         // 决色有新增，需要重新刷新用户
         await this.getRolesList()
       })
+    },
+    editRoles () {
+      this.$refs.editRolesFormRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        console.log('this.editUserForm = ', this.editRolesForm)
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
+        const {data: res} = await this.$http.put(`roles/${this.editRolesForm.roleId}`, {
+          roleDesc: this.editRolesForm.roleDesc,
+          roleName: this.editRolesForm.roleName
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改角色信息失败')
+        }
+        // 重新获取数据
+        await this.getRolesList()
+        // 关闭对话空
+        this.dialogEditRolesVisible = false
+        // 提示修改成功
+        this.$message.info(`角色${this.editRolesForm.roleName}修改成功`)
+      })
+    },
+    async showEditRolesDialog (info) {
+      // 显示编辑对话框
+      this.dialogEditRolesVisible = true
+      console.log('editRoleInfo = ', info)
+      const {data: res} = await this.$http.get(`roles/${info.id}`)
+      if (res.meta.status !== 200) {
+        this.$message.error('查询角色信息失败')
+      }
+      // 插入值
+      this.editRolesForm = res.data
+      console.log('this.editRolesForm111 = ', this.editRolesForm)
     }
   }
 }

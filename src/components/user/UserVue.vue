@@ -288,7 +288,7 @@ export default {
       // 这里是否需要通过id 获取数据
       const {data: res} = await this.$http.get(`users/${info.id}`)
       if (res.meta.status !== 200) {
-        this.$message.error('查询用户信息失败')
+        return this.$message.error('查询用户信息失败')
       }
       // 插入值
       this.editUserForm = res.data
