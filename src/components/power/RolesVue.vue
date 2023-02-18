@@ -44,7 +44,7 @@
           <!--作用域插槽，拿到所有的数据-->
           <template slot-scope="scope">
             <!--每一行都分成了24个列 ，如果有组件需要并排，可以使用el-->
-            <el-row :class="['dbbuttom', i1 === 0? 'dbtop': '' ]" v-for="(item1, i1) in scope.row.children" :key="item1.id">
+            <el-row :class="['dbbuttom', i1 === 0? 'dbtop': '' ,'vcenter']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
               <!--渲染一级权限 一级权限有5列-->
               <el-col :span="5">
                 <el-tag type="success">{{item1.authName}}</el-tag>
@@ -54,7 +54,7 @@
               <el-col :span="19">
                 <!--通过for循环得到二级权限-->
                 <!--去掉二级分割线的头部分割线，一级分割线已经有了-->
-                <el-row :class="[i2 === 0? '': 'dbtop']" v-for="(item2, i2) in item1.children" :key="item2.id">
+                <el-row :class="[i2 === 0? '': 'dbtop','vcenter']" v-for="(item2, i2) in item1.children" :key="item2.id">
                   <el-col :span="6">
                     <el-tag type="success">{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
@@ -305,5 +305,10 @@ export default {
 /*底部的边框线*/
 .dbbuttom {
   border-bottom: 1px solid #eeeeee;
+}
+
+.vcenter {
+  display: flex;
+  align-items: center;
 }
 </style>
