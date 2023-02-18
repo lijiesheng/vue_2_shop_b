@@ -47,8 +47,8 @@
             <el-row :class="['dbbuttom', i1 === 0? 'dbtop': '' ,'vcenter']" v-for="(item1, i1) in scope.row.children" :key="item1.id">
               <!--渲染一级权限 一级权限有5列-->
               <el-col :span="5">
-                <el-tag type="success">{{item1.authName}}</el-tag>
-                <i class="el-icon-caret-right"></i>
+                  <el-tag type="success">{{item1.authName}} <i class="el-icon-circle-close" @click="closeRoleById(scope.row.id,item1.id)"></i></el-tag>
+                  <i class="el-icon-caret-right"></i>
               </el-col>
               <!--渲染二、三级权限 有19列-->
               <el-col :span="19">
@@ -56,13 +56,13 @@
                 <!--去掉二级分割线的头部分割线，一级分割线已经有了-->
                 <el-row :class="[i2 === 0? '': 'dbtop','vcenter']" v-for="(item2, i2) in item1.children" :key="item2.id">
                   <el-col :span="6">
-                    <el-tag type="success">{{item2.authName}}</el-tag>
-                    <i class="el-icon-caret-right"></i>
+                      <el-tag type="success">{{item2.authName}}<i class="el-icon-circle-close" @click="closeRoleById(scope.row.id,item2.id)"/></el-tag>
+                      <i class="el-icon-caret-right"></i>
                   </el-col>
                   <!--通过for循环得到三级权限-->
                   <el-col :span="18">
                     <el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id">
-                      {{item3.authName}}
+                      {{item3.authName}}<i class="el-icon-circle-close" @click="closeRoleById(scope.row.id,item3.id)"></i>
                     </el-tag>
                   </el-col>
                 </el-row>
@@ -262,6 +262,33 @@ export default {
           await this.getRolesList()
           // 重新获取数据
           this.$message.info(info.roleName + '删除成功')
+        }
+      }
+    },
+    // roleId 角色 ID
+    // rightId 权限 ID
+    async closeRoleById (roleId, rightId) {
+      const res = await this.$confirm(`此操作会删除角色, 是否继续`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`roles/${roleId}/rights/${rightId}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除失败')
+        } else {
+          await this.getRolesList()
+          // 重新获取数据
+          this.$message.info('删除成功')
         }
       }
     }
