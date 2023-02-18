@@ -40,7 +40,40 @@
       <!--表格-->
       <el-table :data="roleList" border stripe style="width: 100%" size="medium">
 <!--展开行-->
-        <el-table-column  type="expand" width="100" label="<"></el-table-column>
+        <el-table-column  type="expand" width="100" label="<">
+          <!--作用域插槽，拿到所有的数据-->
+          <template slot-scope="scope">
+            <!--每一行都分成了24个列 ，如果有组件需要并排，可以使用el-->
+            <el-row :class="['dbbuttom', i1 === 0? 'dbtop': '' ]" v-for="(item1, i1) in scope.row.children" :key="item1.id">
+              <!--渲染一级权限 一级权限有5列-->
+              <el-col :span="5">
+                <el-tag type="success">{{item1.authName}}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <!--渲染二、三级权限 有19列-->
+              <el-col :span="19">
+                <!--通过for循环得到二级权限-->
+                <!--去掉二级分割线的头部分割线，一级分割线已经有了-->
+                <el-row :class="[i2 === 0? '': 'dbtop']" v-for="(item2, i2) in item1.children" :key="item2.id">
+                  <el-col :span="6">
+                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <!--通过for循环得到三级权限-->
+                  <el-col :span="18">
+                    <el-tag type="warning" v-for="(item3) in item2.children" :key="item3.id">
+                      {{item3.authName}}
+                    </el-tag>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <!--输出scope的数据-->
+            <pre>
+<!--                          {{scope.row}}-->
+            </pre>
+          </template>
+        </el-table-column>
 <!-- 索引列 -->
         <el-table-column type="index" width="100" label="#"></el-table-column>
         <el-table-column prop="roleDesc" width="200" label="角色描述"></el-table-column>
@@ -259,5 +292,18 @@ export default {
 .el-table {
   margin: 0px;
   font-size: 12px;
+}
+.el-tag {
+  margin: 7px;
+}
+
+/*上面的边框线*/
+.dbtop {
+  border-top: 1px solid #eeeeee;
+}
+
+/*底部的边框线*/
+.dbbuttom {
+  border-bottom: 1px solid #eeeeee;
 }
 </style>
