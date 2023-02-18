@@ -49,7 +49,7 @@
         <el-table-column width="300" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditRolesDialog(scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" circle>删除</el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)">删除</el-button>
             <!--  tooltip 是文字提示          -->
             <el-tooltip content="分配权限" placement="bottom" effect="light">
               <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
@@ -204,6 +204,33 @@ export default {
       // 插入值
       this.editRolesForm = res.data
       console.log('this.editRolesForm111 = ', this.editRolesForm)
+    },
+
+    async showDeleteMessageBox (info) {
+      const res = await this.$confirm(`此操作会删除用户 ${info.roleName}, 是否继续`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      console.log('res = ', res)
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`roles/${info.id}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(info.roleName + '删除失败')
+        } else {
+          await this.getRolesList()
+          // 重新获取数据
+          this.$message.info(info.roleName + '删除成功')
+        }
+      }
     }
   }
 }
