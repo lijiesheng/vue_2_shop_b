@@ -83,7 +83,7 @@
             <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)">删除</el-button>
             <!--  tooltip 是文字提示          -->
             <el-tooltip content="分配权限" placement="bottom" effect="light">
-              <el-button size="mini" type="warning" icon="el-icon-setting" circle @click="showSetRightDialog"></el-button>
+              <el-button size="mini" type="warning" icon="el-icon-setting" circle @click="showSetRightDialog(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -110,11 +110,12 @@
         </div>
       </el-dialog>
       <!--分配权限对话框-->
-      <el-dialog title="分配权限" :visible.sync="dialogDistributeRolesVisbile" width="50%">
+      <!--@close关闭对话空调用-->
+      <el-dialog title="分配权限" :visible.sync="dialogDistributeRolesVisbile" width="50%" @close="setRightDialogClose">
         <!--使用 tree 树形控件  show-checkbox 可以勾选的  -->
         <!-- node-key 每个树节点用来作为唯一标识的属性，整棵树应该是唯一的-->
         <!-- default-expand-all 是否默认展开所有节点-->
-        <el-tree :data="rightsList" show-checkbox :props="defaultProps" default-expand-all node-key="id"></el-tree>
+        <el-tree :data="rightsList" show-checkbox :props="defaultProps" default-expand-all node-key="id" :default-checked-keys="default_checked_keys"></el-tree>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributeRolesVisbile = false">取 消</el-button>
@@ -174,7 +175,9 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'authName'
-      }
+      },
+      // 默认勾选的节点的 key 的数组【id数组】
+      default_checked_keys: []
     }
   },
   created () {
@@ -314,7 +317,7 @@ export default {
       }
     },
     // 展示分配权限的对话框
-    async showSetRightDialog () {
+    async showSetRightDialog (row) {
       this.dialogDistributeRolesVisbile = true
       // 获取所有权限的数据
       const {data: res} = await this.$http.get('rights/tree')
@@ -323,6 +326,22 @@ export default {
       }
       this.rightsList = res.data
       console.log('this.rightsList = ', this.rightsList)
+      // 获取这个角色的权限
+      console.log('row=', row)
+      this.getLeafKeys(row, this.default_checked_keys)
+    },
+    // 通过递归的形式，获取角色下所有三级权限的id,并且保存到 key default_checked_keys
+    getLeafKeys (node, arr) {
+      if (!node.children) { // 是三级节点
+        return arr.push(node.id)
+      }
+      node.children.forEach(item => {
+        this.getLeafKeys(item, arr)
+      })
+    },
+    // 监听分配权限对话框
+    setRightDialogClose () {
+      this.default_checked_keys = []
     }
   }
 }
