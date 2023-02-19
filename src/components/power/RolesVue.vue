@@ -115,11 +115,12 @@
         <!--使用 tree 树形控件  show-checkbox 可以勾选的  -->
         <!-- node-key 每个树节点用来作为唯一标识的属性，整棵树应该是唯一的-->
         <!-- default-expand-all 是否默认展开所有节点-->
-        <el-tree :data="rightsList" show-checkbox :props="defaultProps" default-expand-all node-key="id" :default-checked-keys="default_checked_keys"></el-tree>
+        <!-- ref 引用-->
+        <el-tree :data="rightsList" show-checkbox :props="defaultProps" default-expand-all node-key="id" :default-checked-keys="default_checked_keys" ref="treeRef"></el-tree>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributeRolesVisbile = false">取 消</el-button>
-          <el-button type="primary">确 定</el-button>
+          <el-button type="primary" @click="allotRights">确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -176,6 +177,7 @@ export default {
         children: 'children',
         label: 'authName'
       },
+      roleId: '',
       // 默认勾选的节点的 key 的数组【id数组】
       default_checked_keys: []
     }
@@ -318,6 +320,8 @@ export default {
     },
     // 展示分配权限的对话框
     async showSetRightDialog (row) {
+      // 这里保存id
+      this.roleId = row.id
       this.dialogDistributeRolesVisbile = true
       // 获取所有权限的数据
       const {data: res} = await this.$http.get('rights/tree')
@@ -342,6 +346,24 @@ export default {
     // 监听分配权限对话框
     setRightDialogClose () {
       this.default_checked_keys = []
+    },
+    // 分配权限的确定按钮
+    async allotRights () {
+      // getCheckedKeys 全选； getHalfCheckedNodes 半选
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      console.log('keys=', keys)
+      const idStr = keys.join(',')
+      const {data: res} = await this.$http.post(`roles/${this.roleId}/rights`, {rids: idStr})
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配权限失败')
+      }
+      this.$message.success('分配权限成功')
+      await this.getRolesList()
+      // 关闭对话框
+      this.dialogDistributeRolesVisbile = false
     }
   }
 }
