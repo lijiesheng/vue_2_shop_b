@@ -83,7 +83,7 @@
             <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)">删除</el-button>
             <!--  tooltip 是文字提示          -->
             <el-tooltip content="分配权限" placement="bottom" effect="light">
-              <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
+              <el-button size="mini" type="warning" icon="el-icon-setting" circle @click="showSetRightDialog"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -107,6 +107,14 @@
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogEditRolesVisible = false">取 消</el-button>
           <el-button type="primary" @click="editRoles">确 定</el-button>
+        </div>
+      </el-dialog>
+      <!--分配权限对话框-->
+      <el-dialog title="分配权限" :visible.sync="dialogDistributeRolesVisbile" width="50%">
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogDistributeRolesVisbile = false">取 消</el-button>
+          <el-button type="primary">确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -133,6 +141,8 @@ export default {
       dialogAddRolesFormVisible: false,
       // 编辑对话框的显示与隐藏 false 隐藏; true 打开
       dialogEditRolesVisible: false,
+      // 分配对话框的显示与隐藏 false 隐藏; true 打开
+      dialogDistributeRolesVisbile: false,
       addRolesRules: {
         // 验证角色名是否合法
         roleName: [
@@ -154,7 +164,9 @@ export default {
           {required: true, message: '请输入决胜描述', trigger: 'blur'},
           {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
         ]
-      }
+      },
+      // 全新列表的数据
+      rightsList: [],
     }
   },
   created () {
@@ -292,6 +304,17 @@ export default {
           this.$message.info('删除成功')
         }
       }
+    },
+    // 展示分配权限的对话框
+    async showSetRightDialog () {
+      this.dialogDistributeRolesVisbile = true
+      // 获取所有权限的数据
+      const {data: res} = await this.$http.get('rights/tree')
+      if (res.meta.status !== 200) {
+        return this.$message.error('查询权限信息失败')
+      }
+      this.rightsList = res.data
+      console.log('this.rightsList = ', this.rightsList)
     }
   }
 }
