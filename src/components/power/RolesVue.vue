@@ -111,8 +111,10 @@
       </el-dialog>
       <!--分配权限对话框-->
       <el-dialog title="分配权限" :visible.sync="dialogDistributeRolesVisbile" width="50%">
-        <!--使用 tree 树形控件  show-checkbox 可以勾选的-->
-        <el-tree :data="rightsList" show-checkbox :props="defaultProps"></el-tree>
+        <!--使用 tree 树形控件  show-checkbox 可以勾选的  -->
+        <!-- node-key 每个树节点用来作为唯一标识的属性，整棵树应该是唯一的-->
+        <!-- default-expand-all 是否默认展开所有节点-->
+        <el-tree :data="rightsList" show-checkbox :props="defaultProps" default-expand-all node-key="id"></el-tree>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributeRolesVisbile = false">取 消</el-button>
