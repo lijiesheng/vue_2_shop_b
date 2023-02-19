@@ -111,6 +111,8 @@
       </el-dialog>
       <!--分配权限对话框-->
       <el-dialog title="分配权限" :visible.sync="dialogDistributeRolesVisbile" width="50%">
+        <!--使用 tree 树形控件  show-checkbox 可以勾选的-->
+        <el-tree :data="rightsList" show-checkbox :props="defaultProps"></el-tree>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributeRolesVisbile = false">取 消</el-button>
@@ -167,6 +169,10 @@ export default {
       },
       // 全新列表的数据
       rightsList: [],
+      defaultProps: {
+        children: 'children',
+        label: 'authName'
+      }
     }
   },
   created () {
