@@ -77,8 +77,8 @@
 <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
             <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
 <!--  tooltip 是文字提示          -->
-            <el-tooltip content="分配权限" placement="bottom" effect="light">
-              <el-button size="mini" type="warning" icon="el-icon-setting" circle></el-button>
+            <el-tooltip content="分配角色" placement="bottom" effect="light">
+              <el-button size="mini" type="warning" icon="el-icon-setting" circle @click="showSetRoles(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -118,6 +118,14 @@
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogEditFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="editUser">确 定</el-button>
+        </div>
+      </el-dialog>
+<!--    分配权限对话框  -->
+      <el-dialog title="分配角色" :visible.sync="dialogDistributionRoleVisible" width="50%">
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogDistributionRoleVisible = false">取 消</el-button>
+          <el-button type="primary">确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -163,6 +171,8 @@ export default {
       dialogFormVisible: false,
       // 编辑对话框
       dialogEditFormVisible: false,
+      // 分配角色对话框
+      dialogDistributionRoleVisible: false,
       addUserForm: {
         username: '',
         password: '',
@@ -347,6 +357,10 @@ export default {
           this.$message.info(info.username + '删除成功')
         }
       }
+    },
+    showSetRoles (row) {
+      this.dialogDistributionRoleVisible = true
+      // 获取所有角色的数据
     }
   }
 }
