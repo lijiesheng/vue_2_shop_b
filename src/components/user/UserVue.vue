@@ -122,6 +122,10 @@
       </el-dialog>
 <!--    分配权限对话框  -->
       <el-dialog title="分配角色" :visible.sync="dialogDistributionRoleVisible" width="50%">
+        <div>
+          <p>当前用户：{{row.username}}</p>
+          <p>当前角色：{{row.role_name}}</p>
+        </div>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributionRoleVisible = false">取 消</el-button>
@@ -216,7 +220,11 @@ export default {
           // trigger 触犯校验的时间
           {validator: checkMobile, trigger: 'blur'}
         ]
-      }
+      },
+      // 保存分配角色按钮对话框 保存当前的信息
+      row: {},
+      // 所有角色的列表
+      rolesList: []
     }
   },
   created () {
@@ -358,9 +366,17 @@ export default {
         }
       }
     },
-    showSetRoles (row) {
+    // 展示分配角色的对话框
+    async showSetRoles (row) {
+      this.row = row
       this.dialogDistributionRoleVisible = true
+      console.log('row=', row)
       // 获取所有角色的数据
+      const {data: res} = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败')
+      }
+      this.rolesList = res.data
     }
   }
 }
