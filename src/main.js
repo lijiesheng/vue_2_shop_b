@@ -4,10 +4,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import App from './App'
 import router from './router'
+import TreeTable from 'vue-table-with-tree-grid'
 // 导入全局样式
 import './assets/css/global.css'
 
 Vue.use(ElementUI)
+Vue.component('tree-table', TreeTable)
 
 // 配置请求的根路经
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'

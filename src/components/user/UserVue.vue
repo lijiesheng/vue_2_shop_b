@@ -250,7 +250,6 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.message)
       }
-      console.log('res1111 = ', res)
       this.userlist = res.data.users
       this.total = res.data.total
     },

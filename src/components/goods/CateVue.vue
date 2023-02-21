@@ -17,8 +17,9 @@
         <el-button class="button-position" type="primary" round @click="dialogAddCateFormVisible = true">添加分类</el-button>
       </el-col>
       <!--表格-->
-      <el-table>
-      </el-table>
+      <!--    来自第三方库的表格 vue-table-with-tree-grid  -->
+<!--    show-index 序号  border 列的边框线-->
+      <tree-table :data="goodList" :columns="columns" :selection-type="false" :expand-type="false" show-index border></tree-table>
       <!--分页-->
     </el-row>
   </el-card>
@@ -31,7 +32,39 @@ export default {
   data () {
     return {
       // 添加对话框的显示与隐藏 false 隐藏; true 打开
-      dialogAddCateFormVisible: false
+      dialogAddCateFormVisible: false,
+      // 获取商品列表参数对象
+      queryGoodInfo: {
+        query: '',
+        type: '', // 值：1，2，3 分别表示显示一层二层三层分类列表 【可选参数】如果不传递，则默认获取所有级别的分类
+        // 当前的页数
+        pagenum: 1, // 【可选参数】如果不传递，则默认获取所有分类
+        // 当前每页显示多少条数据
+        pagesize: 5 // 【可选参数】如果不传递，则默认获取所有分类
+      },
+      goodList: [],
+      total: 0,
+      // 为table指定列的定义
+      columns: [
+        {
+          label: '分类名称',
+          prop: 'cat_name'
+        }
+      ]
+    }
+  },
+  created () {
+    this.getGoodList()
+  },
+  methods: {
+    async getGoodList () {
+      const {data: res} = await this.$http.get('categories', {params: this.queryGoodInfo})
+      console.log('res = ', res)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
+      this.goodList = res.data.result
+      this.total = res.data.total
     }
   }
 }
