@@ -19,7 +19,10 @@
       <!--表格-->
       <!--    来自第三方库的表格 vue-table-with-tree-grid  -->
 <!--    show-index 序号  border 列的边框线-->
-      <tree-table :data="goodList" :columns="columns" :selection-type="false" :expand-type="false" show-index border></tree-table>
+      <tree-table :data="goodList" :columns="columns" :selection-type="false" :expand-type="false" show-index border>
+        <template slot="is_ok" slot-scope="scope">
+        </template>
+      </tree-table>
       <!--分页-->
     </el-row>
   </el-card>
@@ -48,7 +51,15 @@ export default {
       columns: [
         {
           label: '分类名称',
-          prop: 'cat_name'
+          prop: 'cat_name',
+          width: '300px'
+        },
+        {
+          label: '是否有效',
+          // 表示，当前列定义为模版列
+          type: 'template',
+          // 表示当前这列使用的模版名称
+          template: 'is_ok'
         }
       ]
     }
