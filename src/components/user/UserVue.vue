@@ -125,6 +125,17 @@
         <div>
           <p>当前用户：{{row.username}}</p>
           <p>当前角色：{{row.role_name}}</p>
+          <p>分配新角色：
+<!--   selectedRoleId  选择的值   -->
+            <el-select v-model="selectedRoleId" placeholder="请选择">
+              <el-option
+                v-for="item in rolesList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </p>
         </div>
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
@@ -224,7 +235,9 @@ export default {
       // 保存分配角色按钮对话框 保存当前的信息
       row: {},
       // 所有角色的列表
-      rolesList: []
+      rolesList: [],
+      // 已经选择的值
+      selectedRoleId: ''
     }
   },
   created () {
