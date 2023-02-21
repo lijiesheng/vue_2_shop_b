@@ -121,7 +121,7 @@
         </div>
       </el-dialog>
 <!--    分配权限对话框  -->
-      <el-dialog title="分配角色" :visible.sync="dialogDistributionRoleVisible" width="50%">
+      <el-dialog title="分配角色" :visible.sync="dialogDistributionRoleVisible" width="50%" @close="setDistributionRoleClose">
         <div>
           <p>当前用户：{{row.username}}</p>
           <p>当前角色：{{row.role_name}}</p>
@@ -140,7 +140,7 @@
         <div slot="footer" class="dialog-footer">
           <!--       dialogFormVisible = false 隐藏对话框       -->
           <el-button @click="dialogDistributionRoleVisible = false">取 消</el-button>
-          <el-button type="primary">确 定</el-button>
+          <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -390,6 +390,24 @@ export default {
         return this.$message.error('获取角色列表失败')
       }
       this.rolesList = res.data
+    },
+    // 点击按钮 分配角色
+    async saveRoleInfo () {
+      if (!this.selectedRoleId) {
+        return this.$message.error('请选择要分配的角色')
+      }
+      const {data: res} = await this.$http.put(`users/${this.row.id}/role`, {rid: this.selectedRoleId})
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配角色列表失败')
+      }
+      this.$message.success('分配角色列表成功')
+      await this.getUsers()
+      this.dialogDistributionRoleVisible = false
+    },
+    // 分配角色对话框的关闭事件
+    setDistributionRoleClose () {
+      this.selectedRoleId = ''
+      this.row = {}
     }
   }
 }
