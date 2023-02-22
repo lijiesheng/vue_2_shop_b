@@ -48,7 +48,26 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
-      <!--分页-->
+
+      <!--    添加分类对话框    写在哪里都可以  -->
+      <el-dialog title="添加分类" :visible.sync="dialogAddCateFormVisible" width="50%" @close="closeAddCateDialog">
+        <!-- rules 添加表单规则      -->
+        <!-- ref 引用      -->
+        <!--     label-width="auto" 默认对其       -->
+        <el-form :model="addCateForm" :rules="addCateRules" ref="addCateRef" label-width="80px">
+          <!--  prop 验证规则的属性       -->
+          <el-form-item label="分类名称" prop="cat_name">
+            <el-input v-model="addCateForm.cat_name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="分类父级">
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogAddCateFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveCateInfo">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-row>
   </el-card>
 </div>
@@ -100,7 +119,22 @@ export default {
           // 表示当前这列使用的模版名称
           template: 'opt'
         }
-      ]
+      ],
+      //
+      addCateForm: {
+        cat_name: '', // 分类名称
+        cat_id: 0, // 分类父级  这个可以根据后端需要传入的参数确定
+        // 分类的等级，默认是一级分类
+        cat_level: 0 // 不能为空，`0`表示一级分类；`1`表示二级分类；`2`表示三级分类
+      },
+      addCateRules: {
+        // 验证分类名称是否合法
+        cat_name: [
+          {required: true, message: '请输入角色名', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ]
+      },
+      selectedCateId: '' // 选择器选择的值
     }
   },
   created () {
@@ -129,6 +163,15 @@ export default {
       this.queryGoodInfo.pagenum = newPage
       // 重新获取数据
       this.getGoodList()
+    },
+
+    // 对话框关闭的时候，清空数据
+    closeAddCateDialog () {
+      this.$refs.addCateRef.resetFields()
+    },
+    saveCateInfo () {
+      // 关闭对话框
+      this.dialogAddCateFormVisible = false
     }
   }
 }
