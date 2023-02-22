@@ -21,6 +21,8 @@
 <!--    show-index 序号  border 列的边框线-->
       <tree-table :data="goodList" :columns="columns" :selection-type="false" :expand-type="false" show-index border>
         <template slot="is_ok" slot-scope="scope">
+          <i v-if="scope.row.cat_deleted === false" class="el-icon-success" style="color: lightgreen"></i>
+          <i v-else-if="scope.row.cat_deleted === true" class="el-icon-error" style="color: lightgreen"></i>
         </template>
       </tree-table>
       <!--分页-->
