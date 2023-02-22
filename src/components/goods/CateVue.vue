@@ -7,7 +7,6 @@
     <el-breadcrumb-item>商品管理</el-breadcrumb-item>
     <el-breadcrumb-item>商品分类</el-breadcrumb-item>
   </el-breadcrumb>
-
   <!--element-ui Card 卡片-->
   <el-card class="box-card">
     <!--   一个添加角色按钮   el-row 代表一行 el-col代表一列 -->
@@ -35,6 +34,20 @@
           <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteCateMessageBox(scope.row)">删除</el-button>
         </template>
       </tree-table>
+
+      <!--     分页 -->
+      <!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+      <!--   current-page 当前是第几页 -->
+      <!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryGoodInfo.pagenum"
+        :page-sizes="[5, 10, 20, 50]"
+        :page-size="queryGoodInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
       <!--分页-->
     </el-row>
   </el-card>
@@ -102,11 +115,39 @@ export default {
       }
       this.goodList = res.data.result
       this.total = res.data.total
+    },
+    // pageSize的改变
+    handleSizeChange (newSize) {
+      console.log(`每页 ${newSize} 条`)
+      this.queryGoodInfo.pagesize = newSize
+      // 重新获取数据
+      this.getGoodList()
+    },
+    // 页码值
+    handleCurrentChange (newPage) {
+      console.log(`当前页: ${newPage}`)
+      this.queryGoodInfo.pagenum = newPage
+      // 重新获取数据
+      this.getGoodList()
     }
   }
 }
 </script>
 
 <style scoped>
+.el-pagination {
+  margin-top: 30px;
+}
 
+.button-position {
+  position: relative;
+  left: -40%;
+  top: 50%;
+  transform: translate(-50%, -120%)
+  /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
+}
+
+.el-card {
+  margin-top: 20px;
+}
 </style>
