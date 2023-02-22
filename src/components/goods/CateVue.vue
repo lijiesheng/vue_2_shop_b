@@ -24,6 +24,16 @@
           <i v-if="scope.row.cat_deleted === false" class="el-icon-success" style="color: lightgreen"></i>
           <i v-else-if="scope.row.cat_deleted === true" class="el-icon-error" style="color: lightgreen"></i>
         </template>
+
+        <template slot="is_cat_level" slot-scope="scope">
+          <el-tag v-if="scope.row.cat_level === 0">一级</el-tag>
+          <el-tag type="success" v-else-if="scope.row.cat_level === 1">二级</el-tag>
+          <el-tag type="info" v-else-if="scope.row.cat_level === 2">三级</el-tag>
+        </template>
+        <template slot="opt" slot-scope="scope">
+          <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditCateDialog(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteCateMessageBox(scope.row)">删除</el-button>
+        </template>
       </tree-table>
       <!--分页-->
     </el-row>
@@ -62,6 +72,20 @@ export default {
           type: 'template',
           // 表示当前这列使用的模版名称
           template: 'is_ok'
+        },
+        {
+          label: '排序',
+          // 表示，当前列定义为模版列
+          type: 'template',
+          // 表示当前这列使用的模版名称
+          template: 'is_cat_level'
+        },
+        {
+          label: '操作',
+          // 表示，当前列定义为模版列
+          type: 'template',
+          // 表示当前这列使用的模版名称
+          template: 'opt'
         }
       ]
     }
