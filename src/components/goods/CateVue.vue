@@ -13,7 +13,7 @@
     <el-row>
       <el-col>
         <!--  点击添加角色按钮，dialogAddRolesFormVisible = true 显示对话框   -->
-        <el-button class="button-position" type="primary" round @click="dialogAddCateFormVisible = true">添加分类</el-button>
+        <el-button class="button-position" type="primary" round @click="showAddCateDialog">添加分类</el-button>
       </el-col>
       <!--表格-->
       <!--    来自第三方库的表格 vue-table-with-tree-grid  -->
@@ -134,13 +134,15 @@ export default {
           {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
         ]
       },
-      selectedCateId: '' // 选择器选择的值
+      selectedCateId: '', // 选择器选择的值
+      parentCateList: [] // 获取所有的分类
     }
   },
   created () {
     this.getGoodList()
   },
   methods: {
+    // 获取一级二级三级的分类
     async getGoodList () {
       const {data: res} = await this.$http.get('categories', {params: this.queryGoodInfo})
       console.log('res = ', res)
@@ -172,6 +174,20 @@ export default {
     saveCateInfo () {
       // 关闭对话框
       this.dialogAddCateFormVisible = false
+    },
+    // 点击按钮，展示添加分类的对话框
+    showAddCateDialog () {
+      this.dialogAddCateFormVisible = true
+      this.getParentCateList()
+    },
+    // 获取父级分类的数据列表 【一级和二级】
+    async getParentCateList () {
+      const {data: res} = await this.$http.get('categories', {params: {type: 2}})
+      console.log('res = ', res)
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
+      this.parentCateList = res.data
     }
   }
 }
@@ -193,4 +209,5 @@ export default {
 .el-card {
   margin-top: 20px;
 }
+
 </style>
