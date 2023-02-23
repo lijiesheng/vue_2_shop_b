@@ -197,6 +197,7 @@ export default {
     saveCateInfo () {
       // 关闭对话框
       this.dialogAddCateFormVisible = false
+      console.log(this.addCateForm)
     },
     // 点击按钮，展示添加分类的对话框
     showAddCateDialog () {
@@ -215,7 +216,18 @@ export default {
     },
     // 级联器发生变化触发这个函数
     parentCateChange (value) {
-      console.log(value)
+      console.log(this.selectKeys)
+      // 如果 selectedKeys 数组中的 length 大于 0, 证明选中了父级分类
+      if (this.selectKeys.length > 0) {
+        // 父分类id
+        this.addCateForm.cat_id = this.selectKeys[this.selectKeys.length - 1]
+        // 为当前分类的等级
+        this.addCateForm.cat_level = this.selectKeys.length
+      } else { // 没有选中父分类
+        this.addCateForm.cat_id = 0
+        // 为当前分类的等级
+        this.addCateForm.cat_level = 0
+      }
     }
   }
 }
