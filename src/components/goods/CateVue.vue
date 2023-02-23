@@ -198,9 +198,26 @@ export default {
       this.addCateForm.cat_level = 0
     },
     saveCateInfo () {
-      // 关闭对话框
-      this.dialogAddCateFormVisible = false
-      console.log(this.addCateForm)
+      this.$refs.addCateRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
+        const {data: res} = await this.$http.post('categories', {
+          cat_pid: this.addCateForm.cat_id,
+          cat_name: this.addCateForm.cat_name,
+          cat_level: this.addCateForm.cat_level
+        })
+        if (res.meta.status !== 201) {
+          this.$message.error('添加分类错误')
+        }
+        this.getGoodList()
+        this.$message.success('添加分类成功')
+        // 关闭对话框
+        this.dialogAddCateFormVisible = false
+      })
     },
     // 点击按钮，展示添加分类的对话框
     showAddCateDialog () {
