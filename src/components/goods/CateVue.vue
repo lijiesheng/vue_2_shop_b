@@ -82,6 +82,22 @@
           <el-button type="primary" @click="saveCateInfo">确 定</el-button>
         </div>
       </el-dialog>
+      <el-dialog title="编辑分类" :visible.sync="dialogEditCateFormVisible" width="50%" @close="closeEditCateDialog">
+        <!-- rules 添加表单规则      -->
+        <!-- ref 引用      -->
+        <!-- label-width 文字的宽度      -->
+        <el-form :model="editCateForm" :rules="editCateRules" ref="editCateRef" label-width="90px">
+<!--    prop 校验      -->
+          <el-form-item label="分类名称" prop="cat_name" >
+              <el-input v-model="editCateForm.cat_name" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <!--       dialogFormVisible = false 隐藏对话框       -->
+          <el-button @click="dialogAddCateFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editCate">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-row>
   </el-card>
 </div>
@@ -94,6 +110,8 @@ export default {
     return {
       // 添加对话框的显示与隐藏 false 隐藏; true 打开
       dialogAddCateFormVisible: false,
+      // 编辑对话框
+      dialogEditCateFormVisible: false,
       // 获取商品列表参数对象
       queryGoodInfo: {
         query: '',
@@ -141,7 +159,20 @@ export default {
         // 分类的等级，默认是一级分类
         cat_level: 0 // 不能为空，`0`表示一级分类；`1`表示二级分类；`2`表示三级分类
       },
+      editCateForm: {
+        cat_name: '', // 分类名称
+        cat_id: '',
+        cat_pid: '',
+        cat_level: ''
+      },
       addCateRules: {
+        // 验证分类名称是否合法
+        cat_name: [
+          {required: true, message: '请输入角色名', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ]
+      },
+      editCateRules: {
         // 验证分类名称是否合法
         cat_name: [
           {required: true, message: '请输入角色名', trigger: 'blur'},
@@ -197,6 +228,10 @@ export default {
       this.addCateForm.cat_id = 0
       this.addCateForm.cat_level = 0
     },
+    // 对话框关闭的时候，清空数据
+    closeEditCateDialog () {
+      this.$refs.editCateRef.resetFields()
+    },
     saveCateInfo () {
       this.$refs.addCateRef.validate(async valid => {
         // 字段的校验通过了, 返回true; 没有通过，返回false
@@ -248,6 +283,41 @@ export default {
         // 为当前分类的等级
         this.addCateForm.cat_level = 0
       }
+    },
+    // 编辑
+    async showEditCateDialog (info) {
+      // 显示对话框
+      this.dialogEditCateFormVisible = true
+      console.log('info = ', info)
+      const {data: res} = await this.$http.get(`categories/${info.cat_id}`)
+      if (res.meta.status !== 200) {
+        return this.$message.error('查询用户信息失败')
+      }
+      console.log('res=', res)
+      this.editCateForm = res.data
+    },
+    showDeleteCateMessageBox () {
+    },
+    editCate () {
+      this.$refs.editCateRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        console.log('this.editCateForm = ', this.editCateForm)
+        // data 是服务器返回的数据，这里将其解构赋值到了 res 对象
+        const {data: res} = await this.$http.put(`categories/${this.editCateForm.cat_id}`, {
+          cat_name: this.editCateForm.cat_name
+        })
+        if (res.meta.status !== 200) {
+          this.$message.error('修改分类信息失败')
+        }
+        this.$message.success('修改分类信息成功')
+        // 重新获取数据
+        await this.getGoodList()
+        // 关闭对话框
+        this.dialogEditCateFormVisible = false
+      })
     }
   }
 }
