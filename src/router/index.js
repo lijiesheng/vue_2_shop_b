@@ -7,6 +7,7 @@ import UserVue from '../components/user/UserVue'
 import RightsVue from '../components/power/RightsVue'
 import RolesVue from '../components/power/RolesVue'
 import CateVue from '../components/goods/CateVue'
+import ParamsVue from '../components/goods/ParamsVue'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ const router = new Router({
           path: '/categories',
           name: 'CateVue',
           component: CateVue
+        },
+        {
+          path: '/params',
+          name: 'ParamsVue',
+          component: ParamsVue
         }
       ]
     }
