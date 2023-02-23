@@ -284,7 +284,7 @@ export default {
         this.addCateForm.cat_level = 0
       }
     },
-    // 编辑
+    // 编辑 导入数据
     async showEditCateDialog (info) {
       // 显示对话框
       this.dialogEditCateFormVisible = true
@@ -296,7 +296,32 @@ export default {
       console.log('res=', res)
       this.editCateForm = res.data
     },
-    showDeleteCateMessageBox () {
+    async showDeleteCateMessageBox (info) {
+      // 如果返回成功,不会进入 catch; 返回失败 进入 catch
+      const res = await this.$confirm(`此操作将删除分类 ${info.cat_name}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      console.log('res_res = ', res)
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`categories/${info.cat_id}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(info.cat_name + '删除失败')
+        } else {
+          await this.getGoodList()
+          // 重新获取数据
+          this.$message.info(info.cat_name + '删除成功')
+        }
+      }
     },
     editCate () {
       this.$refs.editCateRef.validate(async valid => {
