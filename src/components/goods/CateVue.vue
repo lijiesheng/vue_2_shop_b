@@ -60,6 +60,20 @@
             <el-input v-model="addCateForm.cat_name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="分类父级">
+<!--     Cascader 级联选择器       -->
+<!--     expand-trigger="hover" 通过鼠标展开       -->
+<!--     :options="parentCateList" 数据源       -->
+<!--     :props 用来指定配置对象     -->
+<!--     v-model 选中的值，双向绑定到数组中，这里的指只能是数组     -->
+<!--     @change="handleChange" 只要级联选择器的数据发生了变化，就会调用这个方法    -->
+<!--     clearable 支持清空    -->
+              <el-cascader
+                expand-trigger="hover"
+                :options="parentCateList"
+                :props="cascaderProps"
+                v-model="selectKeys"
+                @change="parentCateChange" clearable>
+              </el-cascader>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -135,7 +149,16 @@ export default {
         ]
       },
       selectedCateId: '', // 选择器选择的值
-      parentCateList: [] // 获取所有的分类
+      parentCateList: [], // 获取所有的分类
+      // 指定级联选择器的配置对象
+      cascaderProps: {
+        value: 'cat_id', // 指定选项的值为选项对象的某个属性值【一般是id】
+        label: 'cat_name', // 指定选项标签为选项对象的某个属性值 【一般是name】
+        children: 'children', // 通过children 实现嵌套
+        checkStrictly: true // 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
+      },
+      // 选中父级分类的 Id 数组
+      selectKeys: []
     }
   },
   created () {
@@ -188,6 +211,11 @@ export default {
         return this.$message.error(res.meta.message)
       }
       this.parentCateList = res.data
+      console.log('parentCateList=', this.parentCateList)
+    },
+    // 级联器发生变化触发这个函数
+    parentCateChange (value) {
+      console.log(value)
     }
   }
 }
@@ -208,6 +236,11 @@ export default {
 
 .el-card {
   margin-top: 20px;
+}
+
+/*占满全部的宽度*/
+.el-cascader {
+  width: 100%;
 }
 
 </style>
