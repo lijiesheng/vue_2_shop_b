@@ -193,6 +193,9 @@ export default {
     // 对话框关闭的时候，清空数据
     closeAddCateDialog () {
       this.$refs.addCateRef.resetFields()
+      this.selectKeys = []
+      this.addCateForm.cat_id = 0
+      this.addCateForm.cat_level = 0
     },
     saveCateInfo () {
       // 关闭对话框
