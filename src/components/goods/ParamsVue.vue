@@ -70,7 +70,9 @@ export default {
       // 级联选择框双向绑定到数组
       selectParamsKeys: [],
       // 哪个页签被选中  【在本例中，可以选择的的 many only】
-      activeName: 'many'
+      activeName: 'many',
+      manyTableData: [], // 动态的参数
+      onlyTableData: [] // 静态的参数
     }
   },
   created () {
@@ -101,6 +103,17 @@ export default {
     },
     // 级联器发生变化触发这个函数
     async parentParamsChange () {
+      this.getParamData()
+    },
+    // tab 页签点击事件的处理函数
+    handleTabClick () {
+      console.log(this.activeName)
+      // 切换面板重新获取数据
+      this.getParamData()
+    },
+
+    // 一个公共的方法
+    async getParamData () {
       // 证明选中的不是三级分类
       if (this.selectParamsKeys.length !== 3) {
         this.selectParamsKeys = []
@@ -110,14 +123,16 @@ export default {
       console.log(this.selectParamsKeys)
       // 根据所选的分类Id,和当前所处的面板，获取对应的参数
       const {data: res} = await this.$http.get(
-        `categories/${this.getThirdCateId()}/attributes`, {params: {sel: this.activeName}})
+        `categories/${this.getThirdCateId}/attributes`, {params: {sel: this.activeName}})
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.message)
       }
-    },
-    // tab 页签点击事件的处理函数
-    handleTabClick () {
-      console.log(this.activeName)
+      console.log('res=', res)
+      if (this.activeName === 'many') {
+        this.manyTableData = res.data
+      } else {
+        this.onlyTableData = res.data
+      }
     }
   }
 }
