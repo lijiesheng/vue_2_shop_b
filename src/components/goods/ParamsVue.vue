@@ -38,7 +38,7 @@
         <el-tab-pane label="动态参数" name="many">
           <el-row :gutter="15">
             <el-col>
-              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
+              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled" @click="addDialogVisible = true">添加参数</el-button>
             </el-col>
           </el-row>
 <!-- 动态参数表格  -->
@@ -59,7 +59,7 @@
         <el-tab-pane label="静态属性" name="only">
           <el-row :gutter="15">
             <el-col>
-              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
+              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled" @click="addDialogVisible = true">添加属性</el-button>
             </el-col>
           </el-row>
           <!-- 静态参数表格  -->
@@ -79,6 +79,23 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+<!-- 添加参数的对话框 添加参数和添加属性共用一个对话框 -->
+    <el-dialog :title="getDialogTitleName" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
+      <!-- rules 添加表单规则      -->
+      <!-- ref 引用      -->
+      <!-- label-width 文字的宽度      -->
+      <el-form :model="addForm" :rules="addFormRules" ref="addParamsFormRef" label-width="90px">
+        <!--    prop 校验      -->
+        <el-form-item :label="getDialogTitleName" prop="attr_name" >
+          <el-input v-model="addForm.attr_name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <!--       dialogFormVisible = false 隐藏对话框       -->
+        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,7 +117,18 @@ export default {
       // 哪个页签被选中  【在本例中，可以选择的的 many only】
       activeName: 'many',
       manyTableData: [], // 动态的参数
-      onlyTableData: [] // 静态的参数
+      onlyTableData: [], // 静态的参数
+      addDialogVisible: false, // 控制添加对话框的显示和隐藏
+      addForm: {
+        attr_name: ''
+      }, // 添加参数的表单数据对象
+      addFormRules: {
+        // 验证角色名是否合法
+        attr_name: [
+          {required: true, message: '请输入', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 64 个字符', trigger: 'blur'}
+        ]
+      }
     }
   },
   created () {
@@ -117,7 +145,14 @@ export default {
         return this.selectParamsKeys[2]
       }
       return null
+    },
+    // 计算标题的文本
+    getDialogTitleName () {
+      return this.activeName === 'many' ? '添加动态参数' : '添加静态属性'
     }
+    // 是否显示对话框
+    // isShowDialog () {
+    // }
   },
   methods: {
     // 获取一级二级三级的分类
@@ -131,7 +166,7 @@ export default {
     },
     // 级联器发生变化触发这个函数
     async parentParamsChange () {
-      this.getParamData()
+      await this.getParamData()
     },
     // tab 页签点击事件的处理函数
     handleTabClick () {
@@ -161,6 +196,11 @@ export default {
       } else {
         this.onlyTableData = res.data
       }
+    },
+    // 监听对话框的关闭时间
+    addDialogClose () {
+      console.log('ok')
+      this.$refs.addParamsFormRef.resetFields()
     }
   }
 }
