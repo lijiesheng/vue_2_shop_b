@@ -41,6 +41,20 @@
               <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
             </el-col>
           </el-row>
+<!-- 动态参数表格  -->
+          <el-table :data="manyTableData" border stripe>
+<!--       type="expand" 展开行     -->
+            <el-table-column type="expand" width="60" label="#"></el-table-column>
+            <el-table-column prop="attr_name"  label="参数名称" width="200"></el-table-column>
+            <el-table-column label="操作" width="250">
+              <template slot-scope="scope">
+                <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+                <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
+                <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
         <el-tab-pane label="静态属性" name="only">
           <el-row :gutter="15">
@@ -48,6 +62,20 @@
               <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
             </el-col>
           </el-row>
+          <!-- 静态参数表格  -->
+          <el-table :data="onlyTableData" border stripe>
+            <!--       type="expand" 展开行     -->
+            <el-table-column type="expand" width="60" label="#"></el-table-column>
+            <el-table-column prop="attr_name"  label="属性名称" width="200"></el-table-column>
+            <el-table-column label="操作" width="250">
+              <template slot-scope="scope">
+                <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+                <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
+                <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-tab-pane>
       </el-tabs>
     </el-card>

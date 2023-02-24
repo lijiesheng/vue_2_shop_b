@@ -248,7 +248,7 @@ export default {
         if (res.meta.status !== 201) {
           this.$message.error('添加分类错误')
         }
-        this.getGoodList()
+        await this.getGoodList()
         this.$message.success('添加分类成功')
         // 关闭对话框
         this.dialogAddCateFormVisible = false
