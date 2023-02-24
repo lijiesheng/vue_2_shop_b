@@ -35,14 +35,14 @@
         </el-row>
 <!--  Tab 标签页    -->
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane label="动态参数" name="first">
+        <el-tab-pane label="动态参数" name="many">
           <el-row :gutter="15">
             <el-col>
               <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
             </el-col>
           </el-row>
         </el-tab-pane>
-        <el-tab-pane label="静态属性" name="second">
+        <el-tab-pane label="静态属性" name="only">
           <el-row :gutter="15">
             <el-col>
               <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
@@ -69,8 +69,8 @@ export default {
       },
       // 级联选择框双向绑定到数组
       selectParamsKeys: [],
-      // 哪个页签被选中  【在本例中，可以选择的的 first second】
-      activeName: 'first'
+      // 哪个页签被选中  【在本例中，可以选择的的 many only】
+      activeName: 'many'
     }
   },
   created () {
@@ -80,6 +80,13 @@ export default {
     // 如果按钮需要被禁用 返回 ture, 否则 false
     isBtnDisabled () {
       return this.selectParamsKeys.length !== 3
+    },
+    // 当前选中的三级分类的id
+    getThirdCateId () {
+      if (this.selectParamsKeys.length === 3) {
+        return this.selectParamsKeys[2]
+      }
+      return null
     }
   },
   methods: {
@@ -93,8 +100,20 @@ export default {
       console.log('this.goodParamsList=', this.goodParamsList)
     },
     // 级联器发生变化触发这个函数
-    parentParamsChange () {
+    async parentParamsChange () {
+      // 证明选中的不是三级分类
+      if (this.selectParamsKeys.length !== 3) {
+        this.selectParamsKeys = []
+        return
+      }
+      // 证明选中的是三级分类
       console.log(this.selectParamsKeys)
+      // 根据所选的分类Id,和当前所处的面板，获取对应的参数
+      const {data: res} = await this.$http.get(
+        `categories/${this.getThirdCateId()}/attributes`, {params: {sel: this.activeName}})
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
     },
     // tab 页签点击事件的处理函数
     handleTabClick () {
