@@ -35,8 +35,20 @@
         </el-row>
 <!--  Tab 标签页    -->
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane label="动态参数" name="first"></el-tab-pane>
-        <el-tab-pane label="静态属性" name="second"></el-tab-pane>
+        <el-tab-pane label="动态参数" name="first">
+          <el-row :gutter="15">
+            <el-col>
+              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
+        <el-tab-pane label="静态属性" name="second">
+          <el-row :gutter="15">
+            <el-col>
+              <el-button class="button-position" type="primary" round :disabled="isBtnDisabled">添加属性</el-button>
+            </el-col>
+          </el-row>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -63,6 +75,12 @@ export default {
   },
   created () {
     this.getGoodList()
+  },
+  computed: {
+    // 如果按钮需要被禁用 返回 ture, 否则 false
+    isBtnDisabled () {
+      return this.selectParamsKeys.length !== 3
+    }
   },
   methods: {
     // 获取一级二级三级的分类
@@ -100,6 +118,13 @@ export default {
   left: -10%;
   top: 100%;
   /*transform: translate(-80%, -50%)*/
+  /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
+}
+.button-position {
+  position: relative;
+  left: -40%;
+  top: 50%;
+  transform: translate(-50%, -120%)
   /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
 }
 
