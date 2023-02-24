@@ -57,4 +57,7 @@ export default {
 </script>
 
 <style scoped>
+.box-card {
+  margin-top: 15px;
+}
 </style>
