@@ -199,11 +199,11 @@ export default {
     // 获取一级二级三级的分类
     async getGoodList () {
       const {data: res} = await this.$http.get('categories', {params: this.queryGoodInfo})
-      console.log('res = ', res)
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.message)
       }
       this.goodList = res.data.result
+      console.log('this.goodList = ', this.goodList)
       this.total = res.data.total
     },
     // pageSize的改变
