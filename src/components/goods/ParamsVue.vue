@@ -10,10 +10,12 @@
     <el-card class="box-card">
 <!--  :closable="false" 不能关闭    -->
       <el-alert type="warning" description="注意: 只允许为第三级分类设置相关参数!" show-icon :closable="false"></el-alert>
+<!--  el-row 一行    -->
         <el-row :gutter="15">
           <el-col>
             <span class="shopCateText">
               选择商品分类：
+            </span>
               <!--     Cascader 级联选择器       -->
               <!--     expand-trigger="hover" 通过鼠标展开       -->
               <!--     :options="parentCateList" 数据源       -->
@@ -26,11 +28,16 @@
                 :options="goodParamsList"
                 :props="cascaderParamsProps"
                 v-model="selectParamsKeys"
+                style="width:700px"
                 @change="parentParamsChange" clearable>
               </el-cascader>
-            </span>
           </el-col>
         </el-row>
+<!--  Tab 标签页    -->
+      <el-tabs v-model="activeName" @tab-click="handleTabClick">
+        <el-tab-pane label="动态参数" name="first"></el-tab-pane>
+        <el-tab-pane label="静态属性" name="second"></el-tab-pane>
+      </el-tabs>
     </el-card>
   </div>
 </template>
@@ -49,7 +56,9 @@ export default {
         checkStrictly: false // false,是严格的遵守; 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
       },
       // 级联选择框双向绑定到数组
-      selectParamsKeys: []
+      selectParamsKeys: [],
+      // 哪个页签被选中  【在本例中，可以选择的的 first second】
+      activeName: 'first'
     }
   },
   created () {
@@ -68,6 +77,10 @@ export default {
     // 级联器发生变化触发这个函数
     parentParamsChange () {
       console.log(this.selectParamsKeys)
+    },
+    // tab 页签点击事件的处理函数
+    handleTabClick () {
+      console.log(this.activeName)
     }
   }
 }
@@ -84,9 +97,14 @@ export default {
   /*!*上下是15px 左右是0*!*/
   /*margin: 15px 0;*/
   position: relative;
-  left: -35%;
+  left: -10%;
   top: 100%;
   /*transform: translate(-80%, -50%)*/
   /*如果只需要一个 可以用 translateX(-50%) 或者 translateY(-50%)*/
+}
+
+.el-cascader {
+  min-width: 100px;
+  max-width: 250px;
 }
 </style>
