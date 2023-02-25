@@ -189,7 +189,7 @@ export default {
         checkStrictly: true // 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
       },
       // 选中父级分类的 Id 数组
-      selectKeys: [],
+      selectKeys: []
     }
   },
   created () {

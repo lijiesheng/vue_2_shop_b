@@ -93,7 +93,7 @@
       <div slot="footer" class="dialog-footer">
         <!--       dialogFormVisible = false 隐藏对话框       -->
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="addParam">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -201,6 +201,27 @@ export default {
     addDialogClose () {
       console.log('ok')
       this.$refs.addParamsFormRef.resetFields()
+    },
+    // 添加参数
+    addParam () {
+      console.log('this.selectParamsKeys[2]=', this.selectParamsKeys[2])
+      this.$refs.addParamsFormRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        const {data: res} = await this.$http.post(`categories/${this.selectParamsKeys[2]}/attributes`, {
+          attr_name: this.addForm.attr_name,
+          attr_sel: this.activeName
+        })
+        if (res.meta.status !== 201) {
+          return this.$message.error(`${this.getDialogTitleName}失败`)
+        }
+        this.$message.success(`${this.getDialogTitleName}成功`)
+        // 获取参数列表和静态参数列表
+        await this.getParamData()
+        this.addDialogVisible = false
+      })
     }
   }
 }
