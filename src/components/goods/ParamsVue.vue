@@ -80,7 +80,7 @@
       </el-tabs>
     </el-card>
 <!-- 添加参数的对话框 添加参数和添加属性共用一个对话框 -->
-    <el-dialog :title="getDialogTitleName" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
+    <el-dialog :title="'添加'+getDialogTitleName" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
       <!-- rules 添加表单规则      -->
       <!-- ref 引用      -->
       <!-- label-width 文字的宽度      -->
@@ -94,6 +94,19 @@
         <!--       dialogFormVisible = false 隐藏对话框       -->
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addParam">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--修改动态参数-->
+    <el-dialog :title="'修改'+getDialogTitleName" :visible.sync="editDialogVisble" width="50%">
+      <el-form :model="editForm" :rule="editFormRules" ref="editParamsFormRef" label-width="90px">
+        <el-form-item :label="getDialogTitleName" prop="attr_name" >
+          <el-input v-model="editForm.attr_name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <!--       dialogFormVisible = false 隐藏对话框       -->
+        <el-button @click="editDialogVisble = false">取 消</el-button>
+        <el-button type="primary" @click="editParam">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -119,10 +132,22 @@ export default {
       manyTableData: [], // 动态的参数
       onlyTableData: [], // 静态的参数
       addDialogVisible: false, // 控制添加对话框的显示和隐藏
+      editDialogVisble: false,
       addForm: {
         attr_name: ''
       }, // 添加参数的表单数据对象
+      editForm: {
+        attr_name: '',
+        attr_id: '',
+      },
       addFormRules: {
+        // 验证角色名是否合法
+        attr_name: [
+          {required: true, message: '请输入', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 64 个字符', trigger: 'blur'}
+        ]
+      },
+      editFormRules: {
         // 验证角色名是否合法
         attr_name: [
           {required: true, message: '请输入', trigger: 'blur'},
@@ -148,7 +173,7 @@ export default {
     },
     // 计算标题的文本
     getDialogTitleName () {
-      return this.activeName === 'many' ? '添加动态参数' : '添加静态属性'
+      return this.activeName === 'many' ? '动态参数' : '静态属性'
     }
     // 是否显示对话框
     // isShowDialog () {
@@ -221,6 +246,39 @@ export default {
         // 获取参数列表和静态参数列表
         await this.getParamData()
         this.addDialogVisible = false
+      })
+    },
+    // 点击按钮，显示对话框
+    async showEditDialog (info) {
+      // 显示对话框
+      this.editDialogVisble = true
+      // 通过 id 获取数据
+      console.log('info=', info)
+      const {data: res} = await this.$http.get(`categories/${info.cat_id}/attributes/${info.attr_id}`,
+        {params: {attr_sel: this.activeName}})
+      if (res.meta.status !== 200) {
+        return this.$message.error(`查询${this.getDialogTitleName}失败`)
+      }
+      this.editForm = res.data
+      console.log('res=', res)
+    },
+    editParam () {
+      this.$refs.editParamsFormRef.validate(async valid => {
+        // 字段的校验通过了, 返回true; 没有通过，返回false
+        console.log(valid)
+        // 校验不通过
+        if (!valid) return
+        const {data: res} = await this.$http.put(`categories/${this.getThirdCateId}/attributes/${this.editForm.attr_id}`, {
+          attr_name: this.editForm.attr_name,
+          attr_sel: this.activeName
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error(`${this.getDialogTitleName}失败`)
+        }
+        this.$message.success(`${this.getDialogTitleName}成功`)
+        // 获取参数列表和静态参数列表
+        await this.getParamData()
+        this.editDialogVisble = false
       })
     }
   }
