@@ -51,7 +51,7 @@
                 <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
                 <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
                 <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
+                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteParamsBox(scope.row)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -72,7 +72,7 @@
                 <!--            <el-button type="primary" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
                 <el-button size="mini" type="primary" icon="el-icon-edit" circle @click="showEditDialog(scope.row)"></el-button>
                 <!--            <el-button type="" size="mini" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
-                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteMessageBox(scope.row)"></el-button>
+                <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="showDeleteParamsBox(scope.row)"></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -138,7 +138,7 @@ export default {
       }, // 添加参数的表单数据对象
       editForm: {
         attr_name: '',
-        attr_id: '',
+        attr_id: ''
       },
       addFormRules: {
         // 验证角色名是否合法
@@ -280,6 +280,34 @@ export default {
         await this.getParamData()
         this.editDialogVisble = false
       })
+    },
+    async showDeleteParamsBox (info) {
+      // 如果返回成功,不会进入 catch; 返回失败 进入 catch
+      const res = await this.$confirm(`此操作将${this.getDialogTitleName} ${info.attr_name}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      console.log('info1=>', info)
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`categories/${info.cat_id}/attributes/${info.attr_id}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error(info.attr_name + '删除失败')
+        } else {
+          // 获取参数列表和静态参数列表
+          await this.getParamData()
+          // 重新获取数据
+          this.$message.info(info.attr_name + '删除成功')
+        }
+      }
     }
   }
 }
