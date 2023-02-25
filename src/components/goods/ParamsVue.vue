@@ -44,7 +44,26 @@
 <!-- 动态参数表格  -->
           <el-table :data="manyTableData" border stripe>
 <!--       type="expand" 展开行     -->
-            <el-table-column type="expand" width="60" label="#"></el-table-column>
+            <el-table-column type="expand" width="60" label="#">
+              <template slot-scope="scope">
+                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index" closable @close="closeParamsById(scope.row)">{{item}}</el-tag>
+                <!--动态编辑标签 element-ui-->
+                <!--如果 inputVisible 为 true 则文本框显示 按钮隐藏-->
+                <!--如果 inputVisible 为 false 则文本框隐藏 按钮显示-->
+                <!--keyup 键盘抬起 触发 handleInputConfirm-->
+                <!--blur 失去焦点-->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)">
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ 新增</el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="attr_name"  label="参数名称" width="200"></el-table-column>
             <el-table-column label="操作" width="250">
               <template slot-scope="scope">
@@ -65,7 +84,11 @@
           <!-- 静态参数表格  -->
           <el-table :data="onlyTableData" border stripe>
             <!--       type="expand" 展开行     -->
-            <el-table-column type="expand" width="60" label="#"></el-table-column>
+            <el-table-column type="expand" width="60" label="#">
+              <template slot-scope="scope">
+                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index">{{item}}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column prop="attr_name"  label="属性名称" width="200"></el-table-column>
             <el-table-column label="操作" width="250">
               <template slot-scope="scope">
@@ -216,6 +239,15 @@ export default {
         return this.$message.error(res.meta.message)
       }
       console.log('res=', res)
+      res.data.forEach(item => {
+        if (item.attr_vals) {
+          item.attr_vals = item.attr_vals.split(',')
+        }
+        // 控制文本框的显示与隐藏
+        item.inputVisible = false
+        // 文本框中输入的值
+        item.inputValue = ''
+      })
       if (this.activeName === 'many') {
         this.manyTableData = res.data
       } else {
@@ -308,6 +340,32 @@ export default {
           this.$message.info(info.attr_name + '删除成功')
         }
       }
+    },
+    async closeParamsById (info) {
+      const res = await this.$confirm(`此操作会删除阐述, 是否继续`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+
+      }
+    },
+    // 文本框失去焦点，或摁下了 enter 键都会调用这个方法
+    handleInputConfirm (row) {
+      console.log('ok')
+      row.inputVisible = false
+    },
+    // 点击按钮，展示文本框 ture 显示文本框
+    showInput (row) {
+      row.inputVisible = true
     }
   }
 }
@@ -341,4 +399,14 @@ export default {
   min-width: 100px;
   max-width: 250px;
 }
+.el-tag {
+  margin: 10px;
+}
+
+.input-new-tag {
+  width: 120px;
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
 </style>
