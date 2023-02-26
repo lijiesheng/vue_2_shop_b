@@ -86,7 +86,22 @@
             <!--       type="expand" 展开行     -->
             <el-table-column type="expand" width="60" label="#">
               <template slot-scope="scope">
-                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index">{{item}}</el-tag>
+                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index" closable @close="closeParamsById(scope.row, index)">{{item}}</el-tag>
+                <!--动态编辑标签 element-ui-->
+                <!--如果 inputVisible 为 true 则文本框显示 按钮隐藏-->
+                <!--如果 inputVisible 为 false 则文本框隐藏 按钮显示-->
+                <!--keyup 键盘抬起 触发 handleInputConfirm-->
+                <!--blur 失去焦点-->
+                <el-input
+                  class="input-new-tag"
+                  v-if="scope.row.inputVisible"
+                  v-model="scope.row.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm(scope.row)"
+                  @blur="handleInputConfirm(scope.row)">
+                </el-input>
+                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ 新增</el-button>
               </template>
             </el-table-column>
             <el-table-column prop="attr_name"  label="属性名称" width="200"></el-table-column>
