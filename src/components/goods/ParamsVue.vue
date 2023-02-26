@@ -241,7 +241,9 @@ export default {
       console.log('res=', res)
       res.data.forEach(item => {
         if (item.attr_vals) {
-          item.attr_vals = item.attr_vals.split(',')
+          item.attr_vals = item.attr_vals.split(' ')
+        } else {
+          item.attr_vals = []
         }
         // 控制文本框的显示与隐藏
         item.inputVisible = false
@@ -359,13 +361,47 @@ export default {
       }
     },
     // 文本框失去焦点，或摁下了 enter 键都会调用这个方法
-    handleInputConfirm (row) {
+    async handleInputConfirm (row) {
       console.log('ok')
+      // 文本框如果输入空格，清空
+      if (row.inputValue.trim().length === 0) {
+        row.inputValue = ''
+        row.inputVisible = false
+        return
+      }
+      console.log('row.attr_vals=', row.attr_vals)
+      if (!row.attr_vals) {
+        row.attr_vals = []
+      }
+      // 如果没有 return ，输入的内容需要后序处理
+      row.attr_vals.push(row.inputValue.trim())
+      row.inputValue = ''
       row.inputVisible = false
+      // 提交到数据库
+      console.log('row=', row)
+      const {data: res} = await this.$http.put(`categories/${row.cat_id}/attributes/${row.attr_id}`, {
+        attr_name: row.attr_name,
+        attr_sel: row.attr_sel,
+        attr_vals: row.attr_vals.join(' ')
+      })
+      console.log('res=', res)
+      if (res.meta.status !== 200) {
+        return this.$message.error(`更新失败`)
+      }
+      this.$message.info(`更新成功`)
+      // 重新获取数据
+      // 获取参数列表和静态参数列表
+      await this.getParamData()
     },
     // 点击按钮，展示文本框 ture 显示文本框
     showInput (row) {
       row.inputVisible = true
+      // $nextTick 方法作用，就是当页面上元素被重新渲染之后，
+      // 才会指定回调函数中的代码
+      this.$nextTick(_ => {
+        // 让文本框自动获取焦点的代码
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
     }
   }
 }
