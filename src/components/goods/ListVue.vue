@@ -90,7 +90,33 @@ export default {
       this.total = res.data.total
     },
     showEditGoodsDialog (info) {},
-    showDeleteGoodsMessageBox (info) {},
+    async showDeleteGoodsMessageBox (info) {
+      // 如果返回成功,不会进入 catch; 返回失败 进入 catch
+      const res = await this.$confirm(`此操作将删除商品${info.goods_name}, 是否继续?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => {
+        return err
+      })
+      // 如果用户确认删除，则返回字符串 confirm
+      // 如果用户取消删除，则返回字符串 cancel
+      console.log('info = ', info)
+      if (res === 'cancel') { // 取消
+        return this.$message.info('已取消删除')
+      }
+      if (res === 'confirm') { // 确认
+        const {data: res} = await this.$http.delete(`goods/${info.goods_id}`)
+        console.log('res == ', res)
+        if (res.meta.status !== 200) {
+          return this.$message.error('删除失败')
+        } else {
+          await this.getGoodsList()
+          // 重新获取数据
+          this.$message.info('删除成功')
+        }
+      }
+    },
     // pageSize的改变
     handleSizeChange (newSize) {
       console.log(`每页 ${newSize} 条`)
