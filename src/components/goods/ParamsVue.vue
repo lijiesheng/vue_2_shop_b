@@ -214,7 +214,16 @@ export default {
     },
     // 级联器发生变化触发这个函数
     async parentParamsChange () {
-      await this.getParamData()
+      if (this.getThirdCateId != null) {
+        await this.getParamData()
+      } else {
+        this.selectParamsKeys = []
+        if (this.activeName === 'many') {
+          this.manyTableData = []
+        } else {
+          this.onlyTableData = []
+        }
+      }
     },
     // tab 页签点击事件的处理函数
     handleTabClick () {
