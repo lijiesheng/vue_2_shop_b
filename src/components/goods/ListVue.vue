@@ -19,7 +19,7 @@
         </el-col>
         <!--二列-->
         <el-col :span="4">
-          <el-button type="primary" plain @click="dialogFormVisible = true">添加商品</el-button>
+          <el-button type="primary" plain @click="goGoodsAdd">添加商品</el-button>
         </el-col>
       </el-row>
       <el-table :data="goodsList" style="width: 100%" border stripe>
@@ -130,6 +130,10 @@ export default {
       this.queryGoodsInfo.pagenum = newPage
       // 重新获取数据
       this.getGoodsList()
+    },
+    // 点击添加商品，跳转到一个新的页面
+    goGoodsAdd () {
+      this.$router.push('/goods/add') // 重定向到登录页面
     }
   }
 }
