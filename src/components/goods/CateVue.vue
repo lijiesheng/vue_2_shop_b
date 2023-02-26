@@ -46,7 +46,7 @@
         :page-sizes="[5, 10, 20, 50]"
         :page-size="queryGoodInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
+        :total="total" background>
       </el-pagination>
 
       <!--    添加分类对话框    写在哪里都可以  -->

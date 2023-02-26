@@ -94,7 +94,7 @@
         :page-sizes="[5, 10, 20, 50]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
+        :total="total" background>
       </el-pagination>
 <!--   编辑用户信息的对话框 对话框写在哪里都没有关系 -->
       <el-dialog title="编辑用户" :visible.sync="dialogEditFormVisible" width="50%" @close="closeEditDialog">

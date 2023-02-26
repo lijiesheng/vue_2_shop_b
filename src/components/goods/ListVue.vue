@@ -41,6 +41,19 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--     分页 -->
+      <!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+      <!--   current-page 当前是第几页 -->
+      <!--   page-sizes 每页显示的条数 [这个是设定自己设定的] -->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="queryGoodsInfo.pagenum"
+        :page-sizes="[5, 10, 20, 50]"
+        :page-size="queryGoodsInfo.pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total" background>
+      </el-pagination>
     </el-card>
   </div>
 </template>
@@ -67,6 +80,7 @@ export default {
   },
   methods: {
     async getGoodsList () {
+      console.log('queryGoodsInfo=', this.queryGoodsInfo)
       const {data: res} = await this.$http.get('goods', {params: this.queryGoodsInfo})
       console.log('goodsList = ', res)
       if (res.meta.status !== 200) {
@@ -76,7 +90,21 @@ export default {
       this.total = res.data.total
     },
     showEditGoodsDialog (info) {},
-    showDeleteGoodsMessageBox (info) {}
+    showDeleteGoodsMessageBox (info) {},
+    // pageSize的改变
+    handleSizeChange (newSize) {
+      console.log(`每页 ${newSize} 条`)
+      this.queryGoodsInfo.pagesize = newSize
+      // 重新获取数据
+      this.getGoodsList()
+    },
+    // 页码值
+    handleCurrentChange (newPage) {
+      console.log(`当前页: ${newPage}`)
+      this.queryGoodsInfo.pagenum = newPage
+      // 重新获取数据
+      this.getGoodsList()
+    }
   }
 }
 </script>
