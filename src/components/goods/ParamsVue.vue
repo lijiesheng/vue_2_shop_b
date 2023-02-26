@@ -46,7 +46,7 @@
 <!--       type="expand" 展开行     -->
             <el-table-column type="expand" width="60" label="#">
               <template slot-scope="scope">
-                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index" closable @close="closeParamsById(scope.row)">{{item}}</el-tag>
+                <el-tag v-for="(item, index) in scope.row.attr_vals" :key="index" closable @close="closeParamsById(scope.row, index)">{{item}}</el-tag>
                 <!--动态编辑标签 element-ui-->
                 <!--如果 inputVisible 为 true 则文本框显示 按钮隐藏-->
                 <!--如果 inputVisible 为 false 则文本框隐藏 按钮显示-->
@@ -343,7 +343,7 @@ export default {
         }
       }
     },
-    async closeParamsById (info) {
+    async closeParamsById (info, index) {
       const res = await this.$confirm(`此操作会删除阐述, 是否继续`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -357,7 +357,23 @@ export default {
         return this.$message.info('已取消删除')
       }
       if (res === 'confirm') { // 确认
-
+        console.log('index=', index)
+        console.log('info.attr_vals before=', info.attr_vals)
+        // splice 会修改数组
+        info.attr_vals.splice(index, 1)
+        console.log('info.attr_vals after=', info.attr_vals)
+        const {data: res} = await this.$http.put(`categories/${info.cat_id}/attributes/${info.attr_id}`, {
+          attr_name: info.attr_name,
+          attr_sel: info.attr_sel,
+          attr_vals: info.attr_vals.join(' ')
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error(`更新失败`)
+        }
+        this.$message.info(`更新成功`)
+        // 重新获取数据
+        // 获取参数列表和静态参数列表
+        await this.getParamData()
       }
     },
     // 文本框失去焦点，或摁下了 enter 键都会调用这个方法
@@ -378,7 +394,6 @@ export default {
       row.inputValue = ''
       row.inputVisible = false
       // 提交到数据库
-      console.log('row=', row)
       const {data: res} = await this.$http.put(`categories/${row.cat_id}/attributes/${row.attr_id}`, {
         attr_name: row.attr_name,
         attr_sel: row.attr_sel,
