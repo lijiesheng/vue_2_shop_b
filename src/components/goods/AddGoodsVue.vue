@@ -25,14 +25,18 @@
 
 <!--  Tabs 标签页 -->
 <!--   el-tabs 和  el-tab-pane 中间不能插入 form 表单-->
-      <el-tabs :tab-position="'left'" style="height: 250px;" v-model="activeIndex">
-        <el-tab-pane label="基本信息" name="0">基本信息</el-tab-pane>
-        <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
-        <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-        <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
-        <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
-        <el-tab-pane label="完成" name="5">完成</el-tab-pane>
+<!--   label-position= top 文本在文本框上面-->
+      <el-form ref="addGoodsRef" :model="addGoodsForm" :rules="addGoodsRules" label-width="70px" label-position="top">
+        <el-tabs :tab-position="'left'" style="height: 250px;" v-model="activeIndex">
+          <el-tab-pane label="基本信息" name="0">基本信息
+          </el-tab-pane>
+          <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+          <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
+          <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+          <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+          <el-tab-pane label="完成" name="5">完成</el-tab-pane>
       </el-tabs>
+      </el-form>
     </el-card>
   </div>
 </template>
@@ -42,7 +46,10 @@ export default {
   name: 'AddGoodsVue',
   data () {
     return {
-      activeIndex: 0
+      activeIndex: 0,
+      addGoodsForm: {},
+      addGoodsRules: {
+      }
     }
   },
   methods: {
