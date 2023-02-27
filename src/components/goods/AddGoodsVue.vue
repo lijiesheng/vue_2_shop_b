@@ -24,7 +24,7 @@
       </el-steps>
 
 <!--  Tabs 标签页 -->
-      <el-tabs :tab-position="'left'" style="height: 250px;">
+      <el-tabs :tab-position="'left'" style="height: 250px;" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="基本信息">基本信息</el-tab-pane>
         <el-tab-pane label="商品参数">商品参数</el-tab-pane>
         <el-tab-pane label="商品属性">商品属性</el-tab-pane>
@@ -41,7 +41,14 @@ export default {
   name: 'AddGoodsVue',
   data () {
     return {
-      activeIndex: 0
+      activeIndex: 0,
+      activeName: ''
+    }
+  },
+  methods: {
+    handleClick () {
+      console.log('name=', this.activeName)
+      this.activeIndex = parseInt(this.activeName)
     }
   }
 }
@@ -60,4 +67,7 @@ export default {
   margin: 15px 0;
 }
 
+.el-tabs {
+  margin: 30px 0;
+}
 </style>
