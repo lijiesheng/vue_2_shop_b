@@ -121,6 +121,9 @@ export default {
     // 级联器发生变化触发这个函数
     async parentParamsChange () {
       console.log(this.addGoodsForm.goods_cat)
+      if (this.addGoodsForm.goods_cat.length !== 3) {
+        this.addGoodsForm.goods_cat = []
+      }
     }
   },
   created () {
