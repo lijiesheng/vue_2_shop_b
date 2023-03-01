@@ -33,17 +33,17 @@
               <el-input v-model="addGoodsForm.goods_name"></el-input>
             </el-form-item>
             <!--type="number" 只能输入数字-->
-            <el-form-item label="商品价格" prop="goods_price" type="number">
-              <el-input v-model="addGoodsForm.goods_price"></el-input>
+            <el-form-item label="商品价格" prop="goods_price" >
+              <el-input v-model="addGoodsForm.goods_price" type="number"></el-input>
             </el-form-item>
-            <el-form-item label="商品重量" prop="goods_weight" type="number">
-              <el-input v-model="addGoodsForm.goods_weight"></el-input>
+            <el-form-item label="商品重量" prop="goods_weight" >
+              <el-input v-model="addGoodsForm.goods_weight" type="number"></el-input>
             </el-form-item>
-            <el-form-item label="商品数量" prop="goods_number" type="number">
-              <el-input v-model="addGoodsForm.goods_number" ></el-input>
+            <el-form-item label="商品数量" prop="goods_number">
+              <el-input v-model="addGoodsForm.goods_number" type="number"></el-input>
             </el-form-item>
-            <el-form-item label="商品分类" prop="goods_number" type="number">
-              <el-input v-model="addGoodsForm.goods_number"></el-input>
+            <el-form-item label="商品分类" prop="goods_number" >
+              <el-input v-model="addGoodsForm.goods_number" type="number"></el-input>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">商品参数
