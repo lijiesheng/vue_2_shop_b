@@ -32,13 +32,17 @@
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addGoodsForm.goods_name"></el-input>
             </el-form-item>
-            <el-form-item label="商品价格" prop="goods_price">
+            <!--type="number" 只能输入数字-->
+            <el-form-item label="商品价格" prop="goods_price" type="number">
               <el-input v-model="addGoodsForm.goods_price"></el-input>
             </el-form-item>
-            <el-form-item label="商品重量" prop="goods_weight">
+            <el-form-item label="商品重量" prop="goods_weight" type="number">
               <el-input v-model="addGoodsForm.goods_weight"></el-input>
             </el-form-item>
-            <el-form-item label="商品数量" prop="goods_number">
+            <el-form-item label="商品数量" prop="goods_number" type="number">
+              <el-input v-model="addGoodsForm.goods_number" ></el-input>
+            </el-form-item>
+            <el-form-item label="商品分类" prop="goods_number" type="number">
               <el-input v-model="addGoodsForm.goods_number"></el-input>
             </el-form-item>
           </el-tab-pane>
@@ -62,14 +66,23 @@ export default {
       activeIndex: 0,
       addGoodsForm: {
         goods_name: '',
-        goods_price: '',
-        goods_weight: '',
-        goods_number: ''
+        goods_price: 0,
+        goods_weight: 0,
+        goods_number: 0
       },
       addGoodsRules: {
         goods_name: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+          {required: true, message: '请输入商品名称', trigger: 'blur'},
+          {min: 1, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ],
+        goods_price: [
+          {required: true, message: '请输入商品价格', trigger: 'blur'}
+        ],
+        goods_weight: [
+          {required: true, message: '请输入商品重量', trigger: 'blur'}
+        ],
+        goods_number: [
+          {required: true, message: '请输入商品数量', trigger: 'blur'}
         ]
       }
     }
