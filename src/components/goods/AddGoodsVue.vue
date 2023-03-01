@@ -42,8 +42,15 @@
             <el-form-item label="商品数量" prop="goods_number">
               <el-input v-model="addGoodsForm.goods_number" type="number"></el-input>
             </el-form-item>
-            <el-form-item label="商品分类" prop="goods_number" >
-              <el-input v-model="addGoodsForm.goods_number" type="number"></el-input>
+            <el-form-item label="商品分类" prop="goods_cat">
+              <el-cascader
+                expand-trigger="hover"
+                :options="cateList"
+                :props="cascaderParamsProps"
+                v-model="addGoodsForm.goods_cat"
+                style="width:700px"
+                @change="parentParamsChange" clearable>
+              </el-cascader>
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">商品参数
@@ -68,7 +75,8 @@ export default {
         goods_name: '',
         goods_price: 0,
         goods_weight: 0,
-        goods_number: 0
+        goods_number: 0,
+        goods_cat: [] // 商品的分类数组
       },
       addGoodsRules: {
         goods_name: [
@@ -83,15 +91,40 @@ export default {
         ],
         goods_number: [
           {required: true, message: '请输入商品数量', trigger: 'blur'}
+        ],
+        goods_cat: [
+          {required: true, message: '请输入商品分类', trigger: 'blur'}
         ]
-      }
+      },
+      // 商品分类列表
+      cateList: [],
+      // 指定级联选择器的配置对象
+      cascaderParamsProps: {
+        value: 'cat_id', // 指定选项的值为选项对象的某个属性值【一般是id】
+        label: 'cat_name', // 指定选项标签为选项对象的某个属性值 【一般是name】
+        children: 'children', // 通过children 实现嵌套
+        checkStrictly: false // false,是严格的遵守; 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
+      },
+      // 级联选择框双向绑定到数组
+      selectParamsKeys: []
     }
   },
   methods: {
-    // handleClick () {
-    //   console.log('name=', this.activeName)
-    //   this.activeIndex = parseInt(this.activeName)
-    // }
+    // 获取所有商品分类数据
+    async getCateList () {
+      const {data: res} = await this.$http.get('categories')
+      if (res.meta.status !== 200) {
+        return this.$message.error(res.meta.message)
+      }
+      this.cateList = res.data
+    },
+    // 级联器发生变化触发这个函数
+    async parentParamsChange () {
+      console.log(this.addGoodsForm.goods_cat)
+    }
+  },
+  created () {
+    this.getCateList()
   }
 }
 </script>
