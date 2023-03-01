@@ -26,11 +26,24 @@
 <!--  Tabs 标签页 -->
 <!--   el-tabs 和  el-tab-pane 中间不能插入 form 表单-->
 <!--   label-position= top 文本在文本框上面-->
-      <el-form ref="addGoodsRef" :model="addGoodsForm" :rules="addGoodsRules" label-width="70px" label-position="top">
-        <el-tabs :tab-position="'left'" style="height: 250px;" v-model="activeIndex">
-          <el-tab-pane label="基本信息" name="0">基本信息
+      <el-form ref="addGoodsRef" :model="addGoodsForm" :rules="addGoodsRules" label-width="70px" label-position="left">
+        <el-tabs :tab-position="'left'" v-model="activeIndex">
+          <el-tab-pane label="基本信息" name="0">
+            <el-form-item label="商品名称" prop="goods_name">
+              <el-input v-model="addGoodsForm.goods_name"></el-input>
+            </el-form-item>
+            <el-form-item label="商品价格" prop="goods_price">
+              <el-input v-model="addGoodsForm.goods_price"></el-input>
+            </el-form-item>
+            <el-form-item label="商品重量" prop="goods_weight">
+              <el-input v-model="addGoodsForm.goods_weight"></el-input>
+            </el-form-item>
+            <el-form-item label="商品数量" prop="goods_number">
+              <el-input v-model="addGoodsForm.goods_number"></el-input>
+            </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品参数" name="1">商品参数</el-tab-pane>
+          <el-tab-pane label="商品参数" name="1">商品参数
+          </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
           <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
           <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
@@ -47,8 +60,17 @@ export default {
   data () {
     return {
       activeIndex: 0,
-      addGoodsForm: {},
+      addGoodsForm: {
+        goods_name: '',
+        goods_price: '',
+        goods_weight: '',
+        goods_number: ''
+      },
       addGoodsRules: {
+        goods_name: [
+          {required: true, message: '请输入用户名', trigger: 'blur'},
+          {min: 3, max: 64, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+        ]
       }
     }
   },
