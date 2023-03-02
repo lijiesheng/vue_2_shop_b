@@ -27,7 +27,8 @@
 <!--   el-tabs 和  el-tab-pane 中间不能插入 form 表单-->
 <!--   label-position= top 文本在文本框上面-->
       <el-form ref="addGoodsRef" :model="addGoodsForm" :rules="addGoodsRules" label-width="70px" label-position="left">
-        <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeTabLeave">
+<!--  before-leave 可以获取将要改变的 Tab 和 oldTab  -->
+        <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeTabLeave" @tab-click="handleClickTabs">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addGoodsForm.goods_name"></el-input>
@@ -104,7 +105,8 @@ export default {
         label: 'cat_name', // 指定选项标签为选项对象的某个属性值 【一般是name】
         children: 'children', // 通过children 实现嵌套
         checkStrictly: false // false,是严格的遵守; 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
-      }
+      },
+      manyTableDate: [] // 动态参数的列表
     }
   },
   methods: {
@@ -132,6 +134,24 @@ export default {
         return false // 阻止标签页的切换
       }
       return true
+    },
+    async handleClickTabs () {
+      if (this.activeIndex === '1') {
+        const {data: res} = await this.$http.get(`categories/${this.cateId}/attributes`, {params: {sel: 'many'}})
+        if (res.meta.status !== 200) {
+          return this.$message.error('获取动态列表参数失败！')
+        }
+        this.manyTableDate = res.data
+        console.log(this.manyTableDate)
+      }
+    }
+  },
+  computed: {
+    cateId () {
+      if (this.addGoodsForm.goods_cat.length === 3) {
+        return this.addGoodsForm.goods_cat[2]
+      }
+      return null
     }
   },
   created () {
