@@ -27,7 +27,7 @@
 <!--   el-tabs 和  el-tab-pane 中间不能插入 form 表单-->
 <!--   label-position= top 文本在文本框上面-->
       <el-form ref="addGoodsRef" :model="addGoodsForm" :rules="addGoodsRules" label-width="70px" label-position="left">
-        <el-tabs :tab-position="'left'" v-model="activeIndex">
+        <el-tabs :tab-position="'left'" v-model="activeIndex" :before-leave="beforeTabLeave">
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addGoodsForm.goods_name"></el-input>
@@ -104,9 +104,7 @@ export default {
         label: 'cat_name', // 指定选项标签为选项对象的某个属性值 【一般是name】
         children: 'children', // 通过children 实现嵌套
         checkStrictly: false // false,是严格的遵守; 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
-      },
-      // 级联选择框双向绑定到数组
-      selectParamsKeys: []
+      }
     }
   },
   methods: {
@@ -124,6 +122,16 @@ export default {
       if (this.addGoodsForm.goods_cat.length !== 3) {
         this.addGoodsForm.goods_cat = []
       }
+    },
+    // oldActiveIndex 之前的 tab，改变后的 activeIndex
+    beforeTabLeave (activeIndex, oldActiveIndex) {
+      console.log('activeIndex=', activeIndex)
+      console.log('oldActiveIndex=', oldActiveIndex)
+      if (parseInt(oldActiveIndex) === 0 && this.addGoodsForm.goods_cat.length !== 3) {
+        this.$message.error(`请选择商品分类`)
+        return false // 阻止标签页的切换
+      }
+      return true
     }
   },
   created () {
