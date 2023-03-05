@@ -190,8 +190,16 @@ export default {
 
     },
     // 处理移除图片的操作
-    handleRemove () {
+    handleRemove (file) {
+      console.log('file=', file)
+      // 1. 获取将要删除的图片临时路径
+      const tmpPath = file.response.data.tmp_path
+      // 2. 从 pics 数组中，找到这个图片对应的索引
+      const index = this.addGoodsForm.pics.findIndex(x => x.pic === tmpPath)
 
+      // 3. 调用数组的 splice 方法，把这个图片信息对象，从 pics 数组中移除
+      this.addGoodsForm.pics.splice(index, 1)
+      console.log(this.addGoodsForm.pics)
     },
     // 图片上传成功的静听函数
     handlePicSuccess (response, file, fileList) {
