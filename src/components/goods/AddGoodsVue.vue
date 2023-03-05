@@ -68,11 +68,13 @@
             <!--Upload 图片列表缩略图-->
             <!-- action 上传图片请求的 API 接口 这里要写完整的API地址 -->
             <!-- on-preview 图片预览 -->
+            <!-- headers 携带token -->
             <!-- on-remove 删除图片 -->
             <!-- file-list 删除图片 -->
             <!-- list-type 预览图片的方式 -->
             <el-upload
               action="http://127.0.0.1:8888/api/private/v1/upload"
+              :headers="headerObj"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               list-type="picture">
@@ -129,7 +131,11 @@ export default {
         children: 'children', // 通过children 实现嵌套
         checkStrictly: false // false,是严格的遵守; 是否严格的遵守父子节点不互相关联 【可以选中一级，也可以选中二级，三级。。。】
       },
-      manyTableDate: [] // 动态参数的列表
+      manyTableDate: [], // 动态参数的列表
+      // 图片上传组件的headers请求对象
+      headerObj: {
+        Authorization: window.sessionStorage.getItem('token')
+      }
     }
   },
   methods: {
