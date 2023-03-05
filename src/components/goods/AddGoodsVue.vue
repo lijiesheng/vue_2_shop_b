@@ -72,11 +72,13 @@
             <!-- on-remove 删除图片 -->
             <!-- file-list 删除图片 -->
             <!-- list-type 预览图片的方式 -->
+            <!-- on-success 图片上传成功调用的函数 -->
             <el-upload
               action="http://127.0.0.1:8888/api/private/v1/upload"
               :headers="headerObj"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
+              :on-success="handlePicSuccess"
               list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -102,6 +104,8 @@ export default {
         goods_price: 0,
         goods_weight: 0,
         goods_number: 0,
+        // 图片的数组，上传一张图片，往里面填一个值
+        pics: [],
         goods_cat: [] // 商品的分类数组
       },
       addGoodsRules: {
@@ -188,6 +192,17 @@ export default {
     // 处理移除图片的操作
     handleRemove () {
 
+    },
+    // 图片上传成功的静听函数
+    handlePicSuccess (response, file, fileList) {
+      console.log('response=', response)
+      console.log('file=', file)
+      console.log('fileList=', fileList)
+      // 1. 拼接得到一个图片信息对象
+      const picInfo = {pic: response.data.tmp_path}
+      // 2. 将图片信息对象，push 到 pics 数组中
+      this.addGoodsForm.pics.push(picInfo)
+      console.log('addGoodsForm = ', this.addGoodsForm)
     }
   },
   computed: {
