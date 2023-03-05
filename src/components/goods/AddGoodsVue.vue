@@ -89,6 +89,11 @@
           <el-tab-pane label="完成" name="5">完成</el-tab-pane>
       </el-tabs>
       </el-form>
+
+      <!--图片预览对话框-->
+      <el-dialog title="预览图片" :visible.sync="dialogPreviewPathVisible" width="50%">
+        <img :src="previewPath" alt="" class="previewImg">
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -139,7 +144,11 @@ export default {
       // 图片上传组件的headers请求对象
       headerObj: {
         Authorization: window.sessionStorage.getItem('token')
-      }
+      },
+      // 图片的预览地址
+      previewPath: '',
+      // 添加对话框的显示与隐藏 false 隐藏; true 打开
+      dialogPreviewPathVisible: false
     }
   },
   methods: {
@@ -186,8 +195,10 @@ export default {
       }
     },
     // 处理图片预览效果
-    handlePreview () {
-
+    handlePreview (file) {
+      // 1. 获取将要删除的图片临时路径
+      this.previewPath = file.response.data.url
+      this.dialogPreviewPathVisible = true
     },
     // 处理移除图片的操作
     handleRemove (file) {
@@ -240,6 +251,9 @@ export default {
   margin: 15px 0;
 }
 
+.previewImg {
+  width: 100%;
+}
 .el-tabs {
   margin: 30px 0;
 }
