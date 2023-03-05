@@ -85,7 +85,9 @@
             </el-upload>
 
           </el-tab-pane>
-          <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
+          <el-tab-pane label="商品内容" name="4">
+            <!--富文本编辑器 需要安装依赖 vue-quill-editor-->
+          </el-tab-pane>
           <el-tab-pane label="完成" name="5">完成</el-tab-pane>
       </el-tabs>
       </el-form>
