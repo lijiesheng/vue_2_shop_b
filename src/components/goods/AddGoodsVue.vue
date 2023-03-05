@@ -63,7 +63,24 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
-          <el-tab-pane label="商品图片" name="3">商品图片</el-tab-pane>
+
+          <el-tab-pane label="商品图片" name="3">
+            <!--Upload 图片列表缩略图-->
+            <!-- action 上传图片请求的 API 接口 这里要写完整的API地址 -->
+            <!-- on-preview 图片预览 -->
+            <!-- on-remove 删除图片 -->
+            <!-- file-list 删除图片 -->
+            <!-- list-type 预览图片的方式 -->
+            <el-upload
+              action="http://127.0.0.1:8888/api/private/v1/upload"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload>
+
+          </el-tab-pane>
           <el-tab-pane label="商品内容" name="4">商品内容</el-tab-pane>
           <el-tab-pane label="完成" name="5">完成</el-tab-pane>
       </el-tabs>
@@ -157,6 +174,14 @@ export default {
         })
         console.log(this.manyTableDate)
       }
+    },
+    // 处理图片预览效果
+    handlePreview () {
+
+    },
+    // 处理移除图片的操作
+    handleRemove () {
+
     }
   },
   computed: {
